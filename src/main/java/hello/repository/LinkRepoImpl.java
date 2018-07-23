@@ -23,10 +23,6 @@ public class LinkRepoImpl implements LinkRepoCustom {
     @Override
     public ArrayList<String> getOwnerList(String owner) {
         Query query = new Query();
-        //Criteria criteria = new Criteria();
-        //criteria.where("owner").is(owner);
-        //query.addCriteria(Criteria.where("owner").is(owner));
-        //List<Link> owner_link_list = mongoTemplate.find(query, Link.class);
 
         BasicDBObject distinct_criteria = new BasicDBObject();
         distinct_criteria.append("owner",owner);

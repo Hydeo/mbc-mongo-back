@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-    private UserRepo userRepo;
+    private UserRepo user_repo;
 
     @RequestMapping(method = RequestMethod.GET, value="/getByIdentifier/{identifier}")
     public User getUserByIdentifier(@PathVariable String identifier){
-        return userRepo.findByIdentifier(identifier);
+        return user_repo.findByIdentifier(identifier);
     }
 
     @RequestMapping(method = RequestMethod.POST, value= "/signUp")
@@ -28,7 +28,7 @@ public class UserController {
         JSONParser jp = new JSONParser();
         try{
             JSONObject jp_parsed = (JSONObject) jp.parse(json);
-            return userRepo.save(new User(jp_parsed.get("uid").toString(), jp_parsed.get("identifier").toString()));
+            return user_repo.save(new User(jp_parsed.get("uid").toString(), jp_parsed.get("identifier").toString()));
         }
         catch(ParseException e){
             //TODO See what kind of return we should do for errors
