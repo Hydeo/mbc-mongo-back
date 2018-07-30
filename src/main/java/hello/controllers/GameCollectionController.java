@@ -17,7 +17,7 @@ public class GameCollectionController {
     public GameCollectionRepo game_collection_repo;
 
 
-    @RequestMapping(method = RequestMethod.PUT, value="/GameCollectionRepo")
+    @RequestMapping(method = RequestMethod.PUT, value="/GameCollection")
     public GameCollection addGameToCollection(@RequestBody String json){
         ObjectMapper om = new ObjectMapper();
         GameCollectionAddGame gcag = new GameCollectionAddGame();
@@ -29,5 +29,11 @@ public class GameCollectionController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value="/GameCollection/{userId}")
+    public GameCollection getGameCollectionByUserID(@PathVariable String userId){
+        GameCollection gc =  game_collection_repo.findByUserId(userId);
+        return gc;
     }
 }
