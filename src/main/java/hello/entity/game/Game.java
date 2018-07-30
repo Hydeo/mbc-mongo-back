@@ -1,9 +1,13 @@
 package hello.entity.game;
 
+import org.bson.types.ObjectId;
+
 import java.util.List;
 import java.util.Map;
 
 public class Game {
+
+    public ObjectId _id;
     public int nb_player_min;
     public int nb_player_max;
     public String time_to_play;
@@ -13,6 +17,19 @@ public class Game {
     public List<String> categories;
     public List<String> mechanism;
     public Map<String,GameLocalization> localization;
+
+    public Game(ObjectId _id, int nb_player_min, int nb_player_max, String time_to_play, int age_recommended, double complexity, String type, List<String> categories, List<String> mechanism, Map<String, GameLocalization> localization) {
+        this._id = _id;
+        this.nb_player_min = nb_player_min;
+        this.nb_player_max = nb_player_max;
+        this.time_to_play = time_to_play;
+        this.age_recommended = age_recommended;
+        this.complexity = complexity;
+        this.type = type;
+        this.categories = categories;
+        this.mechanism = mechanism;
+        this.localization = localization;
+    }
 
     public int getNb_player_min() {
         return nb_player_min;

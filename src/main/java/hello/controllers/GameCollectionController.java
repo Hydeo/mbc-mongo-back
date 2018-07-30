@@ -3,6 +3,7 @@ package hello.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hello.controllers.GameCollectionRequest.GameCollectionAddGame;
 import hello.entity.gameCollection.GameCollection;
+import hello.entity.gameCollection.GameCollectionFilled;
 import hello.repository.gameCollection.GameCollectionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +33,9 @@ public class GameCollectionController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/GameCollection/{userId}")
-    public GameCollection getGameCollectionByUserID(@PathVariable String userId){
-        GameCollection gc =  game_collection_repo.findByUserId(userId);
-        return gc;
+    public GameCollectionFilled getGameCollectionByUserID(@PathVariable String userId){
+        //GameCollection gc =  game_collection_repo.findByUserId(userId);
+        GameCollectionFilled user_game_collection =  game_collection_repo.getUserCollection(userId);
+        return user_game_collection;
     }
 }
