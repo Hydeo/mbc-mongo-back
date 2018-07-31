@@ -1,10 +1,12 @@
 package hello.controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hello.controllers.GameCollectionRequest.GameCollectionAddGame;
 import hello.entity.gameCollection.GameCollection;
 import hello.entity.gameCollection.GameCollectionFilled;
 import hello.repository.gameCollection.GameCollectionRepo;
+import hello.utils.MyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +35,12 @@ public class GameCollectionController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/GameCollection/{userId}")
-    public GameCollectionFilled getGameCollectionByUserID(@PathVariable String userId){
-        //GameCollection gc =  game_collection_repo.findByUserId(userId);
+    public JsonNode getGameCollectionByUserID(@PathVariable String userId){
+
         GameCollectionFilled user_game_collection =  game_collection_repo.getUserCollection(userId);
-        return user_game_collection;
+
+        JsonNode json_user_game_collection = MyUtils.customObjectIdJsonMapper(user_game_collection);
+
+        return json_user_game_collection;
     }
 }
