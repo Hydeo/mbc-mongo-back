@@ -66,7 +66,7 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
                 unwind("gameIds"),
                 lookup("game","gameIds","_id","gameList"),
                 unwind("gameList"),
-                group("_id").push("gameIds").as("gameIds").push("gameList").as("gameList")
+                group("_id").first("userId").as("userId").push("gameIds").as("gameIds").push("gameList").as("gameList")
         );
 
         //Convert the aggregation result into a List

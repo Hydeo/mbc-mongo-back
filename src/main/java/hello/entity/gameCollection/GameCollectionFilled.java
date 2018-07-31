@@ -8,11 +8,22 @@ import java.util.List;
 public class GameCollectionFilled {
 
     public String id;
+    public String userId;
     public List<ObjectId> gameIds;
     public List<Game> gameList;
 
-    public GameCollectionFilled(String id, List<ObjectId> gameIds, List<Game> gameList) {
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public GameCollectionFilled(String id, String userId, List<ObjectId> gameIds, List<Game> gameList) {
+
         this.id = id;
+        this.userId = userId;
         this.gameIds = gameIds;
         this.gameList = gameList;
     }
