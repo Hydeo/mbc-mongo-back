@@ -1,16 +1,16 @@
 package hello.controllers.GameCollectionRequest;
 
-public class GameCollectionAddGame {
+public class GameCollectionUserGame {
 
     public String userId;
     public String gameId;
 
-    public GameCollectionAddGame(String userId, String gameId) {
+    public GameCollectionUserGame(String userId, String gameId) {
         this.userId = userId;
         this.gameId = gameId;
     }
 
-    public GameCollectionAddGame() {
+    public GameCollectionUserGame() {
 
     }
 

@@ -1,9 +1,10 @@
 package hello.repository.gameCollection;
 
 import com.mongodb.client.result.UpdateResult;
-import hello.controllers.GameCollectionRequest.GameCollectionAddGame;
+import hello.controllers.GameCollectionRequest.GameCollectionUserGame;
 import hello.entity.gameCollection.GameCollection;
 import hello.entity.gameCollection.GameCollectionFilled;
+import org.bson.BasicBSONObject;
 import org.bson.BsonDocument;
 import org.bson.BsonObjectId;
 import org.bson.BsonString;
@@ -26,10 +27,10 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
     MongoTemplate mongo_template;
 
     @Override
-    public GameCollection addGameToCollection(GameCollectionAddGame gcag) {
+    public GameCollection addGameToCollection(GameCollectionUserGame gcag) {
         //Check if gameId already exist in the collection
         BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.userId));
-        bd.append("gameIds", new BsonString(gcag.gameId));
+        bd.append("gameIds", new BsonObjectId(new ObjectId(gcag.gameId)));
         long count = mongo_template.getCollection("gameCollection").count(bd);
 
         try {
@@ -76,4 +77,17 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
 
         return result.get(0);
     }
+
+    @Override
+    public GameCollection removeGameFromCollectionById(GameCollectionUserGame gcag) {
+
+        Query q = new Query();
+        q.addCriteria(Criteria.where("userId").is("tOajordaDcUVu12meY3GL1uqfIw2"));
+        Update u =
+                new Update().pull("gameIds", new BsonObjectId(new ObjectId("5b55deea1bbc9850a41d6fc1")));
+        UpdateResult ur =  mongo_template.updateFirst(q,u,GameCollection.class);
+        System.out.println(ur.toString());
+        return null;
+    }
+
 }

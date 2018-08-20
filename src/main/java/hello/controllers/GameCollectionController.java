@@ -2,7 +2,7 @@ package hello.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hello.controllers.GameCollectionRequest.GameCollectionAddGame;
+import hello.controllers.GameCollectionRequest.GameCollectionUserGame;
 import hello.entity.gameCollection.GameCollection;
 import hello.entity.gameCollection.GameCollectionFilled;
 import hello.repository.gameCollection.GameCollectionRepo;
@@ -23,10 +23,24 @@ public class GameCollectionController {
     @RequestMapping(method = RequestMethod.PUT, value="/GameCollection")
     public GameCollection addGameToCollection(@RequestBody String json){
         ObjectMapper om = new ObjectMapper();
-        GameCollectionAddGame gcag = new GameCollectionAddGame();
+        GameCollectionUserGame gcag = new GameCollectionUserGame();
         try {
-            gcag = om.readValue(json,GameCollectionAddGame.class);
+            gcag = om.readValue(json,GameCollectionUserGame.class);
             game_collection_repo.addGameToCollection(gcag);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value ="/GameCollection")
+    public GameCollection removeGameFromCollection(@RequestBody String json){
+        ObjectMapper om = new ObjectMapper();
+        GameCollectionUserGame gcag = new GameCollectionUserGame();
+        try {
+            gcag = om.readValue(json,GameCollectionUserGame.class);
+            game_collection_repo.removeGameFromCollectionById(gcag);
 
         } catch (IOException e) {
             e.printStackTrace();
