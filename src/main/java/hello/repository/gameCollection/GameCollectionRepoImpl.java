@@ -1,10 +1,10 @@
 package hello.repository.gameCollection;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.result.UpdateResult;
-import hello.controllers.GameCollectionRequest.GameCollectionUserGame;
+import hello.controllers.GameCollectionRequest.UserGameRequestContract;
 import hello.entity.gameCollection.GameCollection;
 import hello.entity.gameCollection.GameCollectionFilled;
-import org.bson.BasicBSONObject;
 import org.bson.BsonDocument;
 import org.bson.BsonObjectId;
 import org.bson.BsonString;
@@ -27,7 +27,7 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
     MongoTemplate mongo_template;
 
     @Override
-    public GameCollection addGameToCollection(GameCollectionUserGame gcag) {
+    public GameCollection addGameToCollection(UserGameRequestContract gcag) {
         //Check if gameId already exist in the collection
         BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.userId));
         bd.append("gameIds", new BsonObjectId(new ObjectId(gcag.gameId)));
@@ -60,6 +60,36 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
     }
 
     @Override
+    public GameCollection addMaskToGameCollection(UserGameRequestContract gcag) {
+        //Check if gameId already exist in the collection
+        BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.userId));
+        bd.append("gameIds", new BsonObjectId(new ObjectId(gcag.gameId)));
+        long count = mongo_template.getCollection("gameCollection").count(bd);
+
+        try {
+            BsonDocument bd2 = new BsonDocument("_id", new BsonObjectId(new ObjectId(gcag.gameId)));
+            long count1 = mongo_template.getCollection("game").count(bd2);
+            if(count1 ==0) {
+                //TODO Throw non existing game error
+            }
+        }
+        catch (IllegalArgumentException e){
+            //TODO Handle IllegalArgumentException
+            return null;
+        }
+
+
+        if(count > 0 ){
+            //Upsert create a new gameCollection doc if it doesn't exist
+            Query query = new Query();
+            query.addCriteria(new Criteria().where("userId").is(gcag.userId));
+            UpdateResult upr = mongo_template.upsert(query, new Update().set("gameMask."+gcag.gameId,gcag.gameMask), GameCollection.class);
+            return null;
+        }
+        return null;
+    }
+
+    @Override
     public GameCollectionFilled getUserCollection(String userId) {
 
         Aggregation agreg = newAggregation(
@@ -67,7 +97,11 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
                 unwind("gameIds"),
                 lookup("game","gameIds","_id","gameList"),
                 unwind("gameList"),
-                group("_id").first("userId").as("userId").push("gameIds").as("gameIds").push("gameList").as("gameList")
+                group("_id")
+                        .first("userId").as("userId")
+                        .push("gameIds").as("gameIds")
+                        .push("gameList").as("gameList")
+                        .first("gameMask").as("gameMask")
         );
 
         //Convert the aggregation result into a List
@@ -79,7 +113,7 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
     }
 
     @Override
-    public GameCollection removeGameFromCollectionById(GameCollectionUserGame gcag) {
+    public GameCollection removeGameFromCollectionById(UserGameRequestContract gcag) {
 
         Query q = new Query();
         q.addCriteria(Criteria.where("userId").is("tOajordaDcUVu12meY3GL1uqfIw2"));
