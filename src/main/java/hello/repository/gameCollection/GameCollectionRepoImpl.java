@@ -1,8 +1,7 @@
 package hello.repository.gameCollection;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.client.result.UpdateResult;
-import hello.controllers.GameCollectionRequest.UserGameRequestContract;
+import hello.controllers.RequestContract.GameCollectionContract;
 import hello.entity.gameCollection.GameCollection;
 import hello.entity.gameCollection.GameCollectionFilled;
 import org.bson.BsonDocument;
@@ -27,7 +26,7 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
     MongoTemplate mongo_template;
 
     @Override
-    public GameCollection addGameToCollection(UserGameRequestContract gcag) {
+    public GameCollection addGameToCollection(GameCollectionContract gcag) {
         //Check if gameId already exist in the collection
         BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.hydrated_token.getUid()));
         bd.append("gameIds", new BsonObjectId(new ObjectId(gcag.gameId)));
@@ -60,7 +59,7 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
     }
 
     @Override
-    public GameCollection addMaskToGameCollection(UserGameRequestContract gcag) {
+    public GameCollection addMaskToGameCollection(GameCollectionContract gcag) {
         //Check if gameId already exist in the collection
         BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.hydrated_token.getUid()));
         bd.append("gameIds", new BsonObjectId(new ObjectId(gcag.gameId)));
@@ -113,10 +112,10 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
     }
 
     @Override
-    public GameCollection removeGameFromCollectionById(UserGameRequestContract gcag) {
-
+    public GameCollection removeGameFromCollectionById(GameCollectionContract gcag) {
+        //TODO Delete Game mask ?
         Query q = new Query();
-        q.addCriteria(Criteria.where("userId").is("tOajordaDcUVu12meY3GL1uqfIw2"));
+        q.addCriteria(Criteria.where("userId").is(gcag.hydrated_token.getUid()));
         Update u =
                 new Update().pull("gameIds", new BsonObjectId(new ObjectId("5b55deea1bbc9850a41d6fc1")));
         UpdateResult ur =  mongo_template.updateFirst(q,u,GameCollection.class);

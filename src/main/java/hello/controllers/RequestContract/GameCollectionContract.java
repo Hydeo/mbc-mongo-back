@@ -1,12 +1,11 @@
-package hello.controllers.GameCollectionRequest;
+package hello.controllers.RequestContract;
 
 import com.google.firebase.auth.FirebaseToken;
 import hello.entity.gameCollection.GameMask;
 import hello.utils.SpringContext;
 import hello.utils.beans.FireBaseCustomUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
-public class UserGameRequestContract {
+public class GameCollectionContract {
 
 
     protected FireBaseCustomUtils fcu;
@@ -16,7 +15,7 @@ public class UserGameRequestContract {
     public GameMask gameMask;
     public FirebaseToken hydrated_token;
 
-    public UserGameRequestContract(String token, String gameId, GameMask gameMask, FirebaseToken hydrated_token) {
+    public GameCollectionContract(String token, String gameId, GameMask gameMask, FirebaseToken hydrated_token) {
         this.fcu = (FireBaseCustomUtils)SpringContext.getAppContext().getBean("fireBaseCustomUtils");
         this.token = token;
         this.gameId = gameId;
@@ -24,7 +23,7 @@ public class UserGameRequestContract {
         this.hydrated_token = hydrated_token;
     }
 
-    public UserGameRequestContract(String token, String gameId, GameMask gameMask) {
+    public GameCollectionContract(String token, String gameId, GameMask gameMask) {
         this.fcu = (FireBaseCustomUtils)SpringContext.getAppContext().getBean("fireBaseCustomUtils");
         this.token = token;
         this.gameId = gameId;
@@ -32,14 +31,18 @@ public class UserGameRequestContract {
         this.hydrated_token = null;
     }
 
-    public UserGameRequestContract(String token, String gameId) {
+    public GameCollectionContract(String token, String gameId) {
         this.fcu = (FireBaseCustomUtils)SpringContext.getAppContext().getBean("fireBaseCustomUtils");
         this.token = token;
         this.gameId = gameId;
         this.hydrated_token = null;
     }
 
-    public UserGameRequestContract() {
+    public GameCollectionContract(String token) {
+        this.token = token;
+    }
+
+    public GameCollectionContract() {
         this.fcu = (FireBaseCustomUtils)SpringContext.getAppContext().getBean("fireBaseCustomUtils");
     }
 
