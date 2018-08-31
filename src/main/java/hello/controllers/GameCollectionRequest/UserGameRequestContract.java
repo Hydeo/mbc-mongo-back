@@ -1,25 +1,54 @@
 package hello.controllers.GameCollectionRequest;
 
+import com.google.firebase.auth.FirebaseToken;
 import hello.entity.gameCollection.GameMask;
+import hello.utils.SpringContext;
+import hello.utils.beans.FireBaseCustomUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserGameRequestContract {
 
-    public String userId;
+
+    protected FireBaseCustomUtils fcu;
+
+    public String token;
     public String gameId;
     public GameMask gameMask;
+    public FirebaseToken hydrated_token;
 
-    public UserGameRequestContract(String userId, String gameId, GameMask gameMask) {
-        this.userId = userId;
+    public UserGameRequestContract(String token, String gameId, GameMask gameMask, FirebaseToken hydrated_token) {
+        this.fcu = (FireBaseCustomUtils)SpringContext.getAppContext().getBean("fireBaseCustomUtils");
+        this.token = token;
         this.gameId = gameId;
         this.gameMask = gameMask;
+        this.hydrated_token = hydrated_token;
     }
 
-    public UserGameRequestContract(String userId, String gameId) {
-        this.userId = userId;
+    public UserGameRequestContract(String token, String gameId, GameMask gameMask) {
+        this.fcu = (FireBaseCustomUtils)SpringContext.getAppContext().getBean("fireBaseCustomUtils");
+        this.token = token;
         this.gameId = gameId;
+        this.gameMask = gameMask;
+        this.hydrated_token = null;
+    }
+
+    public UserGameRequestContract(String token, String gameId) {
+        this.fcu = (FireBaseCustomUtils)SpringContext.getAppContext().getBean("fireBaseCustomUtils");
+        this.token = token;
+        this.gameId = gameId;
+        this.hydrated_token = null;
     }
 
     public UserGameRequestContract() {
+        this.fcu = (FireBaseCustomUtils)SpringContext.getAppContext().getBean("fireBaseCustomUtils");
+    }
+
+    public boolean validateToken(){
+        FirebaseToken ft = fcu.validateToken(this.token);
+        if(ft == null)
+            return false;
+        this.hydrated_token = ft;
+        return true;
 
     }
 
@@ -31,12 +60,12 @@ public class UserGameRequestContract {
         this.gameMask = gameMask;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getToken() {
+        return token;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getGameId() {

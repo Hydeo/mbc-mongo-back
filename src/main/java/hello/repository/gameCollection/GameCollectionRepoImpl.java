@@ -29,7 +29,7 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
     @Override
     public GameCollection addGameToCollection(UserGameRequestContract gcag) {
         //Check if gameId already exist in the collection
-        BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.userId));
+        BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.hydrated_token.getUid()));
         bd.append("gameIds", new BsonObjectId(new ObjectId(gcag.gameId)));
         long count = mongo_template.getCollection("gameCollection").count(bd);
 
@@ -53,7 +53,7 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
 
         //Upsert create a new gameCollection doc if it doesn't exist
         Query query = new Query();
-        query.addCriteria(new Criteria().where("userId").is(gcag.userId));
+        query.addCriteria(new Criteria().where("userId").is(gcag.hydrated_token.getUid()));
         UpdateResult upr = mongo_template.upsert(query, new Update().push("gameIds", new ObjectId(gcag.gameId)), GameCollection.class);
 
         return null;
@@ -62,7 +62,7 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
     @Override
     public GameCollection addMaskToGameCollection(UserGameRequestContract gcag) {
         //Check if gameId already exist in the collection
-        BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.userId));
+        BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.hydrated_token.getUid()));
         bd.append("gameIds", new BsonObjectId(new ObjectId(gcag.gameId)));
         long count = mongo_template.getCollection("gameCollection").count(bd);
 
@@ -82,7 +82,7 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
         if(count > 0 ){
             //Upsert create a new gameCollection doc if it doesn't exist
             Query query = new Query();
-            query.addCriteria(new Criteria().where("userId").is(gcag.userId));
+            query.addCriteria(new Criteria().where("userId").is(gcag.hydrated_token.getUid()));
             UpdateResult upr = mongo_template.upsert(query, new Update().set("gameMask."+gcag.gameId,gcag.gameMask), GameCollection.class);
             return null;
         }
