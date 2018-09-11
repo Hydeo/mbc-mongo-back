@@ -43,19 +43,16 @@ public class FireBaseCustomUtils {
         FirebaseApp.initializeApp(options);
     }
 
-    public String testmethode(){
+    public String testmethode() {
         return "Test is wow";
     }
 
-    public FirebaseToken validateToken(String token){
+    public FirebaseToken validateToken(String token) throws FirebaseAuthException {
         //TODO Handle the not valid token (disconnect)
         FirebaseToken decodedToken = null;
         FirebaseAuth fa = FirebaseAuth.getInstance();
-        try {
-            decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-        } catch (FirebaseAuthException e) {
-            e.printStackTrace();
-        }
+
+        decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
 
         return decodedToken;
     }

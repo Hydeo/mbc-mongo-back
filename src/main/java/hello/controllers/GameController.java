@@ -1,6 +1,7 @@
 package hello.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.firebase.auth.FirebaseAuthException;
 import hello.controllers.RequestContract.Contract;
 import hello.controllers.RequestContract.GameCollectionContract;
 import hello.controllers.RequestContract.GameContract;
@@ -23,7 +24,7 @@ public class GameController extends Controller {
     public GameRepo game_repo;
 
     @RequestMapping(method = RequestMethod.POST, value="/game")
-    public ResponseEntity<Game> addGame(@RequestBody String Json){
+    public ResponseEntity<Game> addGame(@RequestBody String Json) throws FirebaseAuthException {
         Contract new_game_request = deserialize(Json,"hello.controllers.RequestContract.GameContract");
         Game game_object = ((GameContract)new_game_request).getNew_game();
         //TODO check if everything ok when saving

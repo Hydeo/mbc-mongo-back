@@ -1,6 +1,7 @@
 package hello.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.firebase.auth.FirebaseAuthException;
 import hello.controllers.RequestContract.Contract;
 import hello.controllers.RequestContract.GameCollectionContract;
 
@@ -8,7 +9,7 @@ import java.io.IOException;
 
 public class Controller {
 
-    Contract deserialize(String json, String contractType){
+    Contract deserialize(String json, String contractType) throws FirebaseAuthException {
 
         ObjectMapper om = new ObjectMapper();
 

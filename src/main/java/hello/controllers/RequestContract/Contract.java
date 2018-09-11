@@ -1,5 +1,6 @@
 package hello.controllers.RequestContract;
 
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import hello.utils.SpringContext;
 import hello.utils.beans.FireBaseCustomUtils;
@@ -20,7 +21,7 @@ public class Contract
         this.fcu = (FireBaseCustomUtils) SpringContext.getAppContext().getBean("fireBaseCustomUtils");
     }
 
-    public boolean validateToken(){
+    public boolean validateToken() throws FirebaseAuthException {
         FirebaseToken ft = fcu.validateToken(this.token);
         if(ft == null)
             return false;
