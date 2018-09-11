@@ -5,7 +5,7 @@ import hello.entity.gameCollection.GameMask;
 import hello.utils.SpringContext;
 import hello.utils.beans.FireBaseCustomUtils;
 
-public class GameCollectionContract {
+public class GameCollectionContract extends Contract{
 
 
     protected FireBaseCustomUtils fcu;
