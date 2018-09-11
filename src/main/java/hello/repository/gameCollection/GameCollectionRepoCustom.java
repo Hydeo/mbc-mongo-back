@@ -8,5 +8,5 @@ public interface GameCollectionRepoCustom {
     GameCollection addGameToCollection(GameCollectionContract gcag);
     GameCollection addMaskToGameCollection(GameCollectionContract gcag);
     GameCollectionFilled getUserCollection(String userId);
-    GameCollection removeGameFromCollectionById(GameCollectionContract gcag);
+    void removeGameFromCollectionById(GameCollectionContract gcag);
 }

@@ -107,20 +107,21 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
         AggregationResults<GameCollectionFilled> groupResults
                 = mongo_template.aggregate(agreg,"gameCollection" , GameCollectionFilled.class);
         List<GameCollectionFilled> result = groupResults.getMappedResults();
-
-        return result.get(0);
+        if(result.size()>0)
+            return result.get(0);
+        return null; //TODO Mhhh returning empty collection seems more robust
     }
 
     @Override
-    public GameCollection removeGameFromCollectionById(GameCollectionContract gcag) {
+    public  void removeGameFromCollectionById(GameCollectionContract gcag) {
         //TODO Delete Game mask ?
         Query q = new Query();
         q.addCriteria(Criteria.where("userId").is(gcag.hydrated_token.getUid()));
         Update u =
-                new Update().pull("gameIds", new BsonObjectId(new ObjectId("5b55deea1bbc9850a41d6fc1")));
+                new Update().pull("gameIds", new BsonObjectId(new ObjectId(gcag.getGameId())));
         UpdateResult ur =  mongo_template.updateFirst(q,u,GameCollection.class);
         System.out.println(ur.toString());
-        return null;
+
     }
 
 }

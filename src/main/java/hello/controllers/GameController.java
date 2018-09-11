@@ -1,19 +1,17 @@
 package hello.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.firebase.auth.FirebaseAuthException;
 import hello.controllers.RequestContract.Contract;
-import hello.controllers.RequestContract.GameCollectionContract;
 import hello.controllers.RequestContract.GameContract;
 import hello.entity.game.Game;
-import hello.entity.gameCollection.GameCollection;
 import hello.repository.game.GameRepo;
+import hello.utils.MyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -33,9 +31,10 @@ public class GameController extends Controller {
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/game")
-    public List<Game> getAllGameLibrary(){
+    public JsonNode getAllGameLibrary(){
         List<Game> game_library = game_repo.findAll();
-        return game_library;
+        JsonNode json_game_library = MyUtils.customObjectIdJsonMapper(game_library);
+        return json_game_library;
     }
 
 }

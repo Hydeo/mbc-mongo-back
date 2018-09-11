@@ -2,6 +2,7 @@ package hello.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.json.Json;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import hello.controllers.RequestContract.GameCollectionContract;
@@ -64,12 +65,14 @@ public class GameCollectionController extends Controller{
         return new ResponseEntity<GameCollection>(gc, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value ="/GameCollection")
-    public ResponseEntity<GameCollection> removeGameFromCollection(@RequestBody String json) throws FirebaseAuthException {
+    @RequestMapping(method = RequestMethod.POST, value ="/GameCollection/removeFromCollection")
+    public ResponseEntity<JsonNode> removeGameFromCollection(@RequestBody String json) throws FirebaseAuthException {
         GameCollectionContract gcc = (GameCollectionContract) deserialize(json,"hello.controllers.RequestContract.GameCollectionContract");
         //if gcc not null
-        GameCollection gc = game_collection_repo.removeGameFromCollectionById(gcc);
-        return new ResponseEntity<GameCollection>(gc, HttpStatus.OK);
+        game_collection_repo.removeGameFromCollectionById(gcc);
+        GameCollectionFilled user_game_collection =  game_collection_repo.getUserCollection(gcc.hydrated_token.getUid());
+        JsonNode json_user_game_collection = MyUtils.customObjectIdJsonMapper(user_game_collection);
+        return new ResponseEntity<JsonNode>(json_user_game_collection, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, value="/GameCollection")
@@ -80,6 +83,15 @@ public class GameCollectionController extends Controller{
         JsonNode json_user_game_collection = MyUtils.customObjectIdJsonMapper(user_game_collection);
         return json_user_game_collection;
     }
+
+    @RequestMapping(method = RequestMethod.POST, value="/GameCollection/addToCollection")
+    public JsonNode addGameToUserCollection(@RequestBody String json) throws FirebaseAuthException {
+        GameCollectionContract gcc = (GameCollectionContract) deserialize(json,"hello.controllers.RequestContract.GameCollectionContract");
+        //if gcc not null
+        GameCollection user_game_collection =  game_collection_repo.addGameToCollection(gcc);
+        return getGameCollectionByUserID(json);
+    }
+
 
     @RequestMapping(method = RequestMethod.GET, value="/GameCollection/test/{token}")
     public FirebaseToken test(@PathVariable String userId){

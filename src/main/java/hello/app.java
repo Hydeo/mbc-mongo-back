@@ -1,15 +1,7 @@
 package hello;
 
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseToken;
-import hello.entity.Link;
-import hello.repository.LinkRepo;
 import hello.repository.user.UserRepo;
 import hello.utils.beans.FireBaseCustomUtils;
-import org.apache.catalina.webresources.ClasspathURLStreamHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,15 +15,11 @@ import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
-import java.io.FileInputStream;
-import java.net.URL;
-
 @ComponentScan("hello")
 @SpringBootApplication(scanBasePackages={
         "hello.repository", "hello.entity","hello.controllers"})
 public class app implements CommandLineRunner{
-    @Autowired
-    private LinkRepo repository;
+
     @Autowired
     private UserRepo userRepo;
     @Autowired
