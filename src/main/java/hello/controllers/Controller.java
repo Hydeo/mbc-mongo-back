@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseAuthException;
 import hello.controllers.RequestContract.Contract;
 import hello.controllers.RequestContract.GameCollectionContract;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.io.IOException;
 
+@CrossOrigin
 public class Controller {
 
     Contract deserialize(String json, String contractType) throws FirebaseAuthException {
