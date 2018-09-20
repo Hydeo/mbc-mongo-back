@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.io.IOException;
 
-@CrossOrigin
 public class Controller {
 
     Contract deserialize(String json, String contractType) throws FirebaseAuthException {
