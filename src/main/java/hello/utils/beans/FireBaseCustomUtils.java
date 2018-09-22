@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 @Component
@@ -21,14 +22,16 @@ public class FireBaseCustomUtils {
     public FireBaseCustomUtils() {
         System.out.println("FIREBASE CUTOM INSTANCIATED");
         //TODO place path and url in properties
-        URL classLoader = getClass().getResource("/firebase-sdk.json");
+        /*URL classLoader = getClass().getResource("/firebase-sdk.json");
         FileInputStream serviceAccount =
                 null;
         try {
             serviceAccount = new FileInputStream(classLoader.getPath());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
+        ClassLoader cl = this.getClass().getClassLoader();
+        InputStream serviceAccount = cl.getResourceAsStream("firebase-sdk.json");
 
         FirebaseOptions options = null;
         try {
