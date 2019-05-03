@@ -12,7 +12,7 @@ public class Tag {
     @Id
     ObjectId _id;
     String tagName;
-    ArrayList<TagLang> listLocName;
+    HashMap<String,TagLang> listLocName;
     ArrayList<ObjectId> gameIds;
 
 }
