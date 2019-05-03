@@ -32,7 +32,7 @@ public class GameController extends Controller {
 
     @RequestMapping(method = RequestMethod.GET, value="/game")
     public JsonNode getAllGameLibrary(){
-        List<Game> game_library = game_repo.findAll();
+        List<Game> game_library = game_repo.findAllGames();
         JsonNode json_game_library = MyUtils.customObjectIdJsonMapper(game_library);
         return json_game_library;
     }

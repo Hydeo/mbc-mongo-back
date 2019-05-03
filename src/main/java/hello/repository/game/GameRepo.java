@@ -3,6 +3,8 @@ package hello.repository.game;
 import hello.entity.game.Game;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface GameRepo extends MongoRepository<Game,String> {
+import java.util.List;
+
+public interface GameRepo extends MongoRepository<Game,String>, GameRepoCustom{
 
 }

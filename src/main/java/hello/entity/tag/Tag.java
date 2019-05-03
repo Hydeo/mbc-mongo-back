@@ -11,7 +11,6 @@ import java.util.HashMap;
 public class Tag {
     @Id
     ObjectId _id;
-
     String tagName;
     ArrayList<TagLang> listLocName;
     ArrayList<ObjectId> gameIds;

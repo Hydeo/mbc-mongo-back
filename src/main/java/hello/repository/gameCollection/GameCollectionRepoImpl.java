@@ -93,15 +93,15 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
 
         Aggregation agreg = newAggregation(
                 match(Criteria.where("userId").is(userId)),
-                unwind("gameIds"),
                 lookup("game","gameIds","_id","gameList"),
                 unwind("gameList"),
+                lookup("tag","gameList.tags","_id","gameList.tags"),
                 group("_id")
                         .first("userId").as("userId")
-                        .push("gameIds").as("gameIds")
                         .push("gameList").as("gameList")
                         .first("gameMask").as("gameMask")
         );
+
 
         //Convert the aggregation result into a List
         AggregationResults<GameCollectionFilled> groupResults
