@@ -27,7 +27,7 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
     MongoTemplate mongo_template;
 
     @Override
-    public GameCollectionFilled addGameToCollection(GameCollectionContract gcag) {
+    public GameCollectionFilled toogleGameToCollection(GameCollectionContract gcag) {
         //Check if gameId already exist in the collection
         BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.hydrated_token.getUid()));
         bd.append("gameIds", new BsonObjectId(new ObjectId(gcag.gameId)));
@@ -116,18 +116,6 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
         if(result.size()>0)
             return result.get(0);
         return null; //TODO Mhhh returning empty collection seems more robust
-    }
-
-    @Override
-    public  void removeGameFromCollectionById(GameCollectionContract gcag) {
-        //TODO Delete Game mask ?
-        Query q = new Query();
-        q.addCriteria(Criteria.where("userId").is(gcag.hydrated_token.getUid()));
-        Update u =
-                new Update().pull("gameIds", new BsonObjectId(new ObjectId(gcag.getGameId())));
-        UpdateResult ur =  mongo_template.updateFirst(q,u,GameCollection.class);
-        System.out.println(ur.toString());
-
     }
 
 }
