@@ -3,7 +3,7 @@ package hello.entity.tag;
 import lombok.Data;
 
 @Data
-public class TagLang {
+public class TagTrad {
     String lang;
-    String locName;
+    String trad;
 }
