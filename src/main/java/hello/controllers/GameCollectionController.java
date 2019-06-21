@@ -1,8 +1,6 @@
 package hello.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.json.Json;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import hello.controllers.RequestContract.GameCollectionContract;
@@ -15,9 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -49,20 +44,20 @@ public class GameCollectionController extends Controller{
     }*/
 
     @RequestMapping(method = RequestMethod.PUT, value="/GameCollection")
-    public ResponseEntity<GameCollection> addGameToCollection(@RequestBody String json) throws FirebaseAuthException {
+    public ResponseEntity<GameCollectionFilled> addGameToCollection(@RequestBody String json) throws FirebaseAuthException {
         GameCollectionContract gcc = (GameCollectionContract) deserialize(json,"hello.controllers.RequestContract.GameCollectionContract");
         //if gcc not null
-        GameCollection gc = game_collection_repo.addGameToCollection(gcc);
+        GameCollectionFilled gc = game_collection_repo.addGameToCollection(gcc);
         //TODO Get the tnew collection and send it back
-        return new ResponseEntity<GameCollection>(gc, HttpStatus.OK);
+        return new ResponseEntity<GameCollectionFilled>(gc, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value="/GameCollection/mask")
-    public ResponseEntity<GameCollection> addMaskToGameCollection(@RequestBody String json) throws FirebaseAuthException {
+    public ResponseEntity<GameCollectionFilled> addMaskToGameCollection(@RequestBody String json) throws FirebaseAuthException {
         GameCollectionContract gcc = (GameCollectionContract) deserialize(json,"hello.controllers.RequestContract.GameCollectionContract");
         //if gcc not null
-        GameCollection gc = game_collection_repo.addMaskToGameCollection(gcc);
-        return new ResponseEntity<GameCollection>(gc, HttpStatus.OK);
+        GameCollectionFilled gc = game_collection_repo.addMaskToGameCollection(gcc);
+        return new ResponseEntity<GameCollectionFilled>(gc, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, value ="/GameCollection/removeFromCollection")
@@ -88,7 +83,7 @@ public class GameCollectionController extends Controller{
     public JsonNode addGameToUserCollection(@RequestBody String json) throws FirebaseAuthException {
         GameCollectionContract gcc = (GameCollectionContract) deserialize(json,"hello.controllers.RequestContract.GameCollectionContract");
         //if gcc not null
-        GameCollection user_game_collection =  game_collection_repo.addGameToCollection(gcc);
+        GameCollectionFilled user_game_collection =  game_collection_repo.addGameToCollection(gcc);
         return getGameCollectionByUserID(json);
     }
 
