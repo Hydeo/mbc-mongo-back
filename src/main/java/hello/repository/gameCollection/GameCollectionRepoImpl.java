@@ -1,5 +1,6 @@
 package hello.repository.gameCollection;
 
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import hello.controllers.RequestContract.GameCollectionContract;
 import hello.entity.gameCollection.GameCollection;
@@ -9,6 +10,7 @@ import org.bson.BsonObjectId;
 import org.bson.BsonString;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -30,12 +32,12 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
         //Check if gameId already exist in the collection
         BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.hydrated_token.getUid()));
         bd.append("gameIds", new BsonObjectId(new ObjectId(gcag.gameId)));
-        long count = mongo_template.getCollection("gameCollection").count(bd);
+        long isAlreadyInCollection = mongo_template.getCollection("gameCollection").count(bd);
 
         try {
             BsonDocument bd2 = new BsonDocument("_id", new BsonObjectId(new ObjectId(gcag.gameId)));
-            long count1 = mongo_template.getCollection("game").count(bd2);
-            if(count1 ==0) {
+            long doesGameExist = mongo_template.getCollection("game").count(bd2);
+            if(doesGameExist ==0) {
                 //TODO Throw non existing game error
             }
         }
@@ -45,15 +47,21 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
         }
 
 
-        if(count > 0 ){
+        if(isAlreadyInCollection > 0 ){
             //TODO Handle Custom Exeption, here : game already exist in the collection
-            return null;
-        }
+            Query query =  Query.query( Criteria.where("userId").is(gcag.hydrated_token.getUid()));
+            Update update = new Update().pull("gameIds",new ObjectId(gcag.gameId));
+            FindAndModifyOptions options = FindAndModifyOptions.options();
+            options.returnNew(true);
+            return mongo_template.findAndModify(query, update, options, GameCollection.class);
 
-        //Upsert create a new gameCollection doc if it doesn't exist
-        Query query = new Query();
-        query.addCriteria(new Criteria().where("userId").is(gcag.hydrated_token.getUid()));
-        UpdateResult upr = mongo_template.upsert(query, new Update().push("gameIds", new ObjectId(gcag.gameId)), GameCollection.class);
+        }
+        else{
+            //Upsert create a new gameCollection doc if it doesn't exist
+            Query query = new Query();
+            query.addCriteria(new Criteria().where("userId").is(gcag.hydrated_token.getUid()));
+            UpdateResult upr = mongo_template.upsert(query, new Update().push("gameIds", new ObjectId(gcag.gameId)), GameCollection.class);
+        }
 
         return null;
     }
