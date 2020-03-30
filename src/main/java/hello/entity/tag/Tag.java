@@ -14,5 +14,4 @@ public class Tag {
     String tagName;
     HashMap<String, TagTrad> localization;
     ArrayList<ObjectId> gameIds;
-
 }

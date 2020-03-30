@@ -4,6 +4,7 @@ import hello.entity.tag.Tag;
 import lombok.Data;
 import org.bson.types.ObjectId;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class Game {
     public int age_recommended;
     public double complexity;
     public String type;
-    public List<Tag> tags;
+    public ArrayList<Tag> tags;
     public Map<String,GameLocalization> localization;
 
 }

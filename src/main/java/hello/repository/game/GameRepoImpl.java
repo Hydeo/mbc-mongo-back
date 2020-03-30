@@ -5,6 +5,7 @@ import hello.entity.gameCollection.GameCollectionFilled;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 
@@ -20,8 +21,20 @@ public class GameRepoImpl implements GameRepoCustom {
 
     @Override
     public List<Game> findAllGames() {
+
+
         Aggregation agreg = newAggregation(
-                lookup("tag","tags","_id","tags")
+                unwind("tags"),
+                lookup("tag","tags._id","_id","tags"),
+                unwind("tags"),
+                group("_id")
+                        .first("nb_player_min").as("nb_player_min")
+                        .first("nb_player_max").as("nb_player_max")
+                        .first("time_to_play").as("time_to_play")
+                        .first("age_recommended").as("age_recommended")
+                        .first("type").as("type")
+                        .push("tags").as("tags")
+                        .first("localization").as("localization")
         );
         AggregationResults<Game> groupResults
                 = mongo_template.aggregate(agreg,"game" , Game.class);
