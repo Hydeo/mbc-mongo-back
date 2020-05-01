@@ -7,17 +7,24 @@ import java.util.List;
 public class GameCollection {
 
     public String userId;
+    public Boolean isPublic;
     public List<ObjectId> gameIds;
-    public List<GameMask> gameMasks;
+    public List<GameMask> gameMask;
 
     public GameCollection(String userId, List<ObjectId> gameIds, List<GameMask> gameMask) {
-
         this.userId = userId;
         this.gameIds = gameIds;
         this.gameMask = gameMask;
     }
 
-    public List<GameMask> gameMask;
+    public GameCollection(String userId, List<ObjectId> gameIds, List<GameMask> gameMask,Boolean isPublic) {
+        this.userId = userId;
+        this.gameIds = gameIds;
+        this.gameMask = gameMask;
+        this.isPublic = isPublic == null ? false : isPublic;
+    }
+
+
 
     public GameCollection() {
     }
@@ -28,6 +35,13 @@ public class GameCollection {
         this.gameIds = gameIds;
     }
 
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
     public String getuserId() {
         return userId;
     }

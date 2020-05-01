@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -104,10 +105,12 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
                 lookup("tag","gameList.tags","_id","gameList.tags"),
                 group("_id")
                         .first("userId").as("userId")
+                        .first("isPublic").as("isPublic")
                         .push("gameList").as("gameList")
-                        .first("gameMask").as("gameMask")
+                        .first("gameMask").as("gameMask"),
+                project("userId","isPublic","gameList","gameMask")
+                    .and(ConditionalOperators.ifNull("isPublic").then(false)).as("isPublic")
         );
-
 
         //Convert the aggregation result into a List
         AggregationResults<GameCollectionFilled> groupResults

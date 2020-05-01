@@ -11,6 +11,7 @@ import java.util.List;
 public class GameCollectionFilled {
 
     public String id;
+    public Boolean isPublic;
     public String userId;
     public List<Game> gameList;
     public HashMap<String,GameMask> gameMask;
