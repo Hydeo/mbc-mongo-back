@@ -14,7 +14,8 @@ public class Game {
     public ObjectId _id;
     public int nb_player_min;
     public int nb_player_max;
-    public String time_to_play;
+    public int time_to_play_min;
+    public int time_to_play_max;
     public int age_recommended;
     public double complexity;
     public String type;
