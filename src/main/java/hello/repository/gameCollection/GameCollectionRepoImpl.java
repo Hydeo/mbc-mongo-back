@@ -102,12 +102,13 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
                 match(Criteria.where("userId").is(userId)),
                 lookup("game","gameIds","_id","gameList"),
                 unwind("gameList"),
-                lookup("tag","gameList.tags","_id","gameList.tags"),
+                lookup("tag","gameList.tags._id","_id","gameList.tags"),
                 group("_id")
                         .first("userId").as("userId")
                         .first("isPublic").as("isPublic")
                         .push("gameList").as("gameList")
-                        .first("gameMask").as("gameMask"),
+                        .first("gameMask").as("gameMask")
+                        .push("tags").as("tags"),
                 project("userId","isPublic","gameList","gameMask")
                     .and(ConditionalOperators.ifNull("isPublic").then(false)).as("isPublic")
         );
