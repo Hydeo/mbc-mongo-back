@@ -10,8 +10,8 @@ import java.util.HashMap;
 @Data
 public class Tag {
     @Id
-    ObjectId _id;
-    String tagName;
-    HashMap<String, TagTrad> localization;
-    ArrayList<ObjectId> gameIds;
+    public ObjectId _id;
+    public String tagName;
+    public HashMap<String, TagTrad> localization;
+    public ArrayList<ObjectId> gameIds;
 }

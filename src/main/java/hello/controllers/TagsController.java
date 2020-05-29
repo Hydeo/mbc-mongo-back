@@ -7,6 +7,7 @@ import hello.utils.MyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -25,8 +26,13 @@ public class TagsController extends Controller{
 
     @RequestMapping(method = RequestMethod.GET, value="/tag/")
     public JsonNode getAllTag(){
-        List<Tag> list_tag = tag_repo.findAll();
-        JsonNode j_list_tag = MyUtils.customObjectIdJsonMapper(list_tag );
+        List<Tag> listTag = tag_repo.findAll();
+        HashMap<String,Tag> tagsHashMap = new HashMap<String,Tag>();
+
+        for(Tag t : listTag){
+            tagsHashMap.put(t._id.toString(),t);
+        }
+        JsonNode j_list_tag = MyUtils.customObjectIdJsonMapper(tagsHashMap);
         return j_list_tag ;
     }
 }
