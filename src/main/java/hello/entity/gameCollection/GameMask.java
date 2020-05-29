@@ -8,9 +8,22 @@ public class GameMask{
     public String price;
     public String comment;
     public Float rating;
+
+    public String title;
+    public String imageUrl;
+
     public Game override;
 
     public GameMask() {
+    }
+
+    public GameMask(String price, String comment, Float rating, String title, String imageUrl, Game override) {
+        this.price = price;
+        this.comment = comment;
+        this.rating = rating;
+        this.title = title;
+        this.imageUrl = imageUrl;
+        this.override = override;
     }
 
     public GameMask( String price, String comment, Float rating, Game override) {
