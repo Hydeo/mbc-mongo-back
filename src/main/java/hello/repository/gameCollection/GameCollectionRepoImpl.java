@@ -32,11 +32,11 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
         //Check if gameId already exist in the collection
         BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.hydrated_token.getUid()));
         bd.append("gameIds", new BsonObjectId(new ObjectId(gcag.gameId)));
-        long isAlreadyInCollection = mongo_template.getCollection("gameCollection").count(bd);
+        long isAlreadyInCollection = mongo_template.getCollection("gameCollection").countDocuments(bd);
 
         try {
             BsonDocument bd2 = new BsonDocument("_id", new BsonObjectId(new ObjectId(gcag.gameId)));
-            long doesGameExist = mongo_template.getCollection("game").count(bd2);
+            long doesGameExist = mongo_template.getCollection("game").countDocuments(bd2);
             if(doesGameExist ==0) {
                 //TODO Throw non existing game error
             }
@@ -71,11 +71,11 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
         //Check if gameId already exist in the collection
         BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.hydrated_token.getUid()));
         bd.append("gameIds", new BsonObjectId(new ObjectId(gcag.gameId)));
-        long count = mongo_template.getCollection("gameCollection").count(bd);
+        long count = mongo_template.getCollection("gameCollection").countDocuments(bd);
 
         try {
             BsonDocument bd2 = new BsonDocument("_id", new BsonObjectId(new ObjectId(gcag.gameId)));
-            long count1 = mongo_template.getCollection("game").count(bd2);
+            long count1 = mongo_template.getCollection("game").countDocuments(bd2);
             if(count1 ==0) {
                 //TODO Throw non existing game error
             }
