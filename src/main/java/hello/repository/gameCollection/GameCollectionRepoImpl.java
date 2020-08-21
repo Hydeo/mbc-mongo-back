@@ -85,7 +85,6 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
             return this.getUserCollection(gcag.hydrated_token.getUid());
         }
 
-
         if(count > 0 ){
             //Upsert create a new gameCollection doc if it doesn't exist
             Query query = new Query();

@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseToken;
 import hello.controllers.RequestContract.GameCollectionContract;
 import hello.entity.gameCollection.GameCollection;
 import hello.entity.gameCollection.GameCollectionFilled;
+import hello.repository.game.GameRepo;
 import hello.repository.gameCollection.GameCollectionRepo;
 import hello.utils.MyUtils;
 import hello.utils.beans.FireBaseCustomUtils;
@@ -21,6 +22,9 @@ public class GameCollectionController extends Controller{
 
     @Autowired
     public GameCollectionRepo game_collection_repo;
+
+    @Autowired
+    public GameRepo game_repo;
 
     @Autowired
     public FireBaseCustomUtils fcu;
@@ -55,11 +59,17 @@ public class GameCollectionController extends Controller{
     }
 
     @RequestMapping(method = RequestMethod.PUT, value="/GameCollection/mask")
-    public ResponseEntity<GameCollectionFilled> addMaskToGameCollection(@RequestBody String json) throws FirebaseAuthException {
+    public ResponseEntity addMaskToGameCollection(@RequestBody String json) throws FirebaseAuthException {
         GameCollectionContract gcc = (GameCollectionContract) deserialize(json,"hello.controllers.RequestContract.GameCollectionContract");
-        //if gcc not null
-        GameCollectionFilled gc = game_collection_repo.addMaskToGameCollection(gcc);
-        return new ResponseEntity<GameCollectionFilled>(gc, HttpStatus.OK);
+
+        Boolean gameExist = game_repo.existsById(gcc.gameId);
+        if(gameExist) {
+            GameCollectionFilled gc = game_collection_repo.addMaskToGameCollection(gcc);
+            return new ResponseEntity<GameCollectionFilled>(gc, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<String>("Game doesn't exist", HttpStatus.NOT_FOUND);
+        }
     }
     
     @RequestMapping(method = RequestMethod.POST, value="/GameCollection")

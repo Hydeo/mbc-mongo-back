@@ -20,8 +20,8 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
         "hello.repository", "hello.entity","hello.controllers"})
 public class app implements CommandLineRunner{
 
-    @Autowired
-    private UserRepo userRepo;
+    /*@Autowired
+    private UserRepo userRepo;*/
     @Autowired
     private FireBaseCustomUtils fcu;
 
