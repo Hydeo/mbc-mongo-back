@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class GameCollection {
 
+    public String id;
     public String userId;
     public Boolean isPublic;
     public ArrayList<ObjectId> gameIds;
@@ -25,8 +26,6 @@ public class GameCollection {
         this.isPublic = isPublic == null ? false : isPublic;
     }
 
-
-
     public GameCollection() {
     }
 
@@ -34,6 +33,14 @@ public class GameCollection {
 
         this.userId = userId;
         this.gameIds = gameIds;
+    }
+
+    public GameCollection(String id, String userId, Boolean isPublic, ArrayList<ObjectId> gameIds, ArrayList<GameMask> gameMask) {
+        this.id = id;
+        this.userId = userId;
+        this.isPublic = isPublic;
+        this.gameIds = gameIds;
+        this.gameMask = gameMask;
     }
 
     public boolean isPublic() {

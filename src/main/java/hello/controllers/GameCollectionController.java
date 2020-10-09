@@ -1,8 +1,10 @@
 package hello.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
+import hello.controllers.RequestContract.Contract;
 import hello.controllers.RequestContract.GameCollectionContract;
 import hello.entity.gameCollection.GameCollection;
 import hello.entity.gameCollection.GameCollectionFilled;
@@ -29,25 +31,6 @@ public class GameCollectionController extends Controller{
     @Autowired
     public FireBaseCustomUtils fcu;
 
-    /*private GameCollectionContract deserialize(String json){
-        ObjectMapper om = new ObjectMapper();
-        GameCollectionContract gcag = new GameCollectionContract();
-        try {
-            gcag = om.readValue(json, GameCollectionContract.class);
-
-            if(gcag.validateToken() == true) {
-                return gcag;
-            }
-            else{
-                //TODO Throw invalid token then http error
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }*/
-
     @RequestMapping(method = RequestMethod.PUT, value="/GameCollection")
     public ResponseEntity<JsonNode> toogleGameToCollection(@RequestBody String json) throws FirebaseAuthException {
         GameCollectionContract gcc = (GameCollectionContract) deserialize(json,"hello.controllers.RequestContract.GameCollectionContract");
@@ -56,6 +39,18 @@ public class GameCollectionController extends Controller{
         //TODO Get the tnew collection and send it back
         JsonNode json_user_game_collection = MyUtils.customObjectIdJsonMapper(gc);
         return new ResponseEntity<JsonNode>(json_user_game_collection, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value="/GameCollection/privacy")
+    public ResponseEntity<Void> toogleIsPublicCollection(@RequestBody String json) throws FirebaseAuthException {
+        Contract c = deserialize(json,"hello.controllers.RequestContract.Contract");
+        //if gcc not null
+        GameCollection gc = game_collection_repo.findByUserId(c.getHydrated_token().getUid());
+        if(gc != null) {
+            game_collection_repo.updateIsPublicCollection(!gc.isPublic, gc.id);
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+        return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value="/GameCollection/mask")
@@ -74,10 +69,11 @@ public class GameCollectionController extends Controller{
     
     @RequestMapping(method = RequestMethod.POST, value="/GameCollection")
     public JsonNode getGameCollectionByUserID(@RequestBody String json) throws FirebaseAuthException {
-        GameCollectionContract gcc = (GameCollectionContract) deserialize(json,"hello.controllers.RequestContract.GameCollectionContract");
-        //if gcc not null
-        GameCollectionFilled user_game_collection =  game_collection_repo.getUserCollection(gcc.hydrated_token.getUid());
+        Contract c = (Contract) deserialize(json,"hello.controllers.RequestContract.Contract");
+
+        GameCollectionFilled user_game_collection =  game_collection_repo.getUserCollection(c.hydrated_token.getUid());
         JsonNode json_user_game_collection = MyUtils.customObjectIdJsonMapper(user_game_collection);
+
         return json_user_game_collection;
     }
 

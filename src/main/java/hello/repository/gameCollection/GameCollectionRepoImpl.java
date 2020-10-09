@@ -67,6 +67,15 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
     }
 
     @Override
+    public void updateIsPublicCollection(boolean isPublic, String collectionId) {
+        Query query =  Query.query( Criteria.where("id").is(collectionId));
+        Update update = new Update().set("isPublic",isPublic);
+        FindAndModifyOptions options = FindAndModifyOptions.options();
+        options.returnNew(true);
+        GameCollection gc = mongo_template.findAndModify(query, update, options, GameCollection.class);
+    }
+
+    @Override
     public GameCollectionFilled addMaskToGameCollection(GameCollectionContract gcag) {
         //Check if gameId already exist in the collection
         BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.hydrated_token.getUid()));
