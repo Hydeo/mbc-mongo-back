@@ -4,6 +4,7 @@ import hello.entity.tag.Tag;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class Game {
     public double complexity;
     public String type;
 
+    @DBRef
     public ArrayList<Tag> tags;
     public Map<String,GameLocalization> localization;
 
