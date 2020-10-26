@@ -67,7 +67,7 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
     }
 
     @Override
-    public void updateIsPublicCollection(boolean isPublic, String collectionId) {
+    public void updateIsPublicCollection(boolean isPublic, ObjectId collectionId) {
         Query query =  Query.query( Criteria.where("id").is(collectionId));
         Update update = new Update().set("isPublic",isPublic);
         FindAndModifyOptions options = FindAndModifyOptions.options();

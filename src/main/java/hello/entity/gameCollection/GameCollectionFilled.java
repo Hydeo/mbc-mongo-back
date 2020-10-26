@@ -2,18 +2,17 @@ package hello.entity.gameCollection;
 
 import hello.entity.game.Game;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.bson.types.ObjectId;
 
 import java.util.HashMap;
 import java.util.List;
 
 @Data
-public class GameCollectionFilled {
+@Getter
+@Setter
+public class GameCollectionFilled extends AGameCollection{
 
-    public String id;
-    public Boolean isPublic;
-    public String userId;
     public List<Game> gameList;
-    public HashMap<String,GameMask> gameMask;
-
 }

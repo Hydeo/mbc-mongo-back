@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -35,6 +36,16 @@ public class GameController extends Controller {
         List<Game> game_library = game_repo.findAllGames();
         JsonNode json_game_library = MyUtils.customObjectIdJsonMapper(game_library);
         return json_game_library;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value="/game/{id}")
+    public ResponseEntity getGameById(@PathVariable String id){
+        Optional<Game> g = game_repo.findById(id);
+        if(g.isPresent()){
+            JsonNode json_game_library = MyUtils.customObjectIdJsonMapper(g.get());
+            return new ResponseEntity<JsonNode>(json_game_library, HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Game not found.", HttpStatus.NOT_FOUND);
     }
 
 }

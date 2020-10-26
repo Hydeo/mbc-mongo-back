@@ -47,7 +47,7 @@ public class GameCollectionController extends Controller{
         //if gcc not null
         GameCollection gc = game_collection_repo.findByUserId(c.getHydrated_token().getUid());
         if(gc != null) {
-            game_collection_repo.updateIsPublicCollection(!gc.isPublic, gc.id);
+            game_collection_repo.updateIsPublicCollection(!gc.isPublic, gc._id);
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
         return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
@@ -77,9 +77,9 @@ public class GameCollectionController extends Controller{
         return json_user_game_collection;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value="/GameCollection/{uid}")
-    public ResponseEntity getPublicGameCollectionByUserID(@PathVariable String uid) {
-        GameCollectionFilled user_game_collection =  game_collection_repo.getUserCollection(uid);
+    @RequestMapping(method = RequestMethod.GET, value="/GameCollection/{id}")
+    public ResponseEntity getPublicGameCollectionByID(@PathVariable String id) {
+        GameCollectionFilled user_game_collection =  game_collection_repo.getUserCollection(id);
         if(user_game_collection.isPublic) {
             JsonNode json_user_game_collection = MyUtils.customObjectIdJsonMapper(user_game_collection);
             return new ResponseEntity<JsonNode>(json_user_game_collection,HttpStatus.OK);
