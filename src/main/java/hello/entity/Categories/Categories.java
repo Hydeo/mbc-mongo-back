@@ -1,28 +1,21 @@
 package hello.entity.Categories;
 
+import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Data
+@Entity
+@Table(name = "Catagories")
 public class Categories {
-
-    public int id_category;
+    @Id
+    public Long id;
+    @Column(name = "name")
     public String name;
-
-    public Categories(int id_category, String name) {
-        this.id_category = id_category;
-        this.name = name;
-    }
-
-    public int getId_category() {
-        return id_category;
-    }
-
-    public void setId_category(int id_category) {
-        this.id_category = id_category;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

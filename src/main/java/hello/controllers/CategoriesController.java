@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 public class CategoriesController extends Controller {
 
-    @Autowired
-    CategoriesRepo categories_repo;
+    /*@Autowired
+    CategoriesRepo categories_repo;*/
 
 
-    @RequestMapping(method = RequestMethod.GET, value="/categories/{lang}")
+    /*@RequestMapping(method = RequestMethod.GET, value="/categories/{lang}")
     public JsonNode getCategoriesByLang(@PathVariable String lang){
         LocalizedCategories all_localized_categories = categories_repo.findByLang(lang);
         JsonNode json_game_library = MyUtils.customObjectIdJsonMapper(all_localized_categories);
         return json_game_library;
-    }
+    }*/
 }

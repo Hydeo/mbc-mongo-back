@@ -1,8 +1,10 @@
 package hello.repository.categories;
 
-import hello.entity.Categories.LocalizedCategories;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import hello.entity.Categories.Categories;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface CategoriesRepo extends MongoRepository<LocalizedCategories,String> {
-    LocalizedCategories findByLang(String lang);
+@Repository
+public interface CategoriesRepo extends CrudRepository<Categories,Long> {
+
 }
