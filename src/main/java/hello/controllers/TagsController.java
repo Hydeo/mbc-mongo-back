@@ -17,12 +17,12 @@ public class TagsController extends Controller{
     @Autowired
     TagRepo tag_repo;
 
-    @RequestMapping(method = RequestMethod.GET, value="/tag/{tagName}")
+    /*@RequestMapping(method = RequestMethod.GET, value="/tag/{tagName}")
     public JsonNode getTagByName(@PathVariable String tagName){
         Tag tag = tag_repo.findByTagName(tagName);
         JsonNode j_tag = MyUtils.customObjectIdJsonMapper(tag);
         return j_tag;
-    }
+    }*/
 
     @RequestMapping(method = RequestMethod.GET, value="/tag/")
     public JsonNode getAllTag(){
@@ -30,7 +30,7 @@ public class TagsController extends Controller{
         HashMap<String,Tag> tagsHashMap = new HashMap<String,Tag>();
 
         for(Tag t : listTag){
-            tagsHashMap.put(t._id.toString(),t);
+            tagsHashMap.put(t.id.toString(),t);
         }
         JsonNode j_list_tag = MyUtils.customObjectIdJsonMapper(tagsHashMap);
         return j_list_tag ;

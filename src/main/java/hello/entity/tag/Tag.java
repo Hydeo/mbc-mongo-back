@@ -1,17 +1,39 @@
 package hello.entity.tag;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import java.util.Date;
+import java.util.Set;
 
 @Data
+@Entity
+@Getter
+@Setter
+@Table(name = "game_tags")
+@EntityListeners(AuditingEntityListener.class)
+@JsonIgnoreProperties(value = {"createdAt"},
+        allowGetters = true)
 public class Tag {
     @Id
-    public ObjectId _id;
-    public String tagName;
-    public HashMap<String, TagTrad> localization;
-    public ArrayList<ObjectId> gameIds;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long id;
+
+    @Column(name = "name")
+    @NotBlank
+    public String name;
+
+    @OneToMany(mappedBy="gameTag")
+    public Set<TagTrad> localization;
+
+    @Column(nullable = false, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
+    private Date createdAt;
 }

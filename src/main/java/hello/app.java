@@ -1,7 +1,11 @@
 package hello;
 
 import hello.entity.Categories.Categories;
+import hello.entity.tag.Tag;
+import hello.entity.tag.TagTrad;
 import hello.repository.categories.CategoriesRepo;
+import hello.repository.tag.TagRepo;
+import hello.repository.tag.TagTradRepo;
 import hello.repository.user.UserRepo;
 import hello.utils.beans.FireBaseCustomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -20,6 +25,7 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 @ComponentScan("hello")
+@EnableJpaAuditing
 @SpringBootApplication(scanBasePackages={
         "hello.repository", "hello.entity","hello.controllers","hello.utils"})
 public class app implements CommandLineRunner{
@@ -32,6 +38,12 @@ public class app implements CommandLineRunner{
     @Autowired
     CategoriesRepo cr;
 
+    @Autowired
+    TagRepo tr;
+
+    @Autowired
+    TagTradRepo ttr;
+
     public static void main(String[] args) {
         SpringApplication.run(app.class, args);
     }
@@ -40,12 +52,27 @@ public class app implements CommandLineRunner{
     public void run(String... args) throws Exception {
 
         Categories cat = new Categories();
-        cat.name = "MyName";
-        cat.id = 12354L;
+        cat.name = "MyName2";
         cr.save(cat);
         cr.findAll().forEach(c ->{
             System.out.println(c.id);
         });
+
+
+        Tag t1 = new Tag();
+        t1.name = "t1";
+        TagTrad tt1 = new TagTrad();
+        TagTrad tt2 = new TagTrad();
+
+        tt1.gameTag = t1;
+        tt1.lang ="tt1";
+
+        tt2.gameTag = t1;
+        tt2.lang ="tt2";
+
+        tr.save(t1);
+        ttr.save(tt1);
+        ttr.save(tt2);
        /* URL classLoader = getClass().getResource("/firebase-sdk.json");
         FileInputStream serviceAccount =
                 new FileInputStream(classLoader.getPath());
