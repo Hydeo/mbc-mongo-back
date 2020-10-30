@@ -1,18 +1,24 @@
 package hello;
 
 import hello.entity.Categories.Categories;
+import hello.entity.game.Game;
 import hello.entity.tag.Tag;
 import hello.entity.tag.TagTrad;
 import hello.repository.categories.CategoriesRepo;
+import hello.repository.game.GameRepo;
 import hello.repository.tag.TagRepo;
 import hello.repository.tag.TagTradRepo;
 import hello.repository.user.UserRepo;
+import hello.service.ServiceTest;
+import hello.utils.SpringContext;
 import hello.utils.beans.FireBaseCustomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -23,11 +29,18 @@ import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import java.util.HashSet;
+import java.util.Set;
 
 @ComponentScan("hello")
 @EnableJpaAuditing
 @SpringBootApplication(scanBasePackages={
-        "hello.repository", "hello.entity","hello.controllers","hello.utils"})
+        "hello.repository", "hello.entity","hello.controllers","hello.service","hello.utils"})
 public class app implements CommandLineRunner{
 
     /*@Autowired
@@ -44,35 +57,28 @@ public class app implements CommandLineRunner{
     @Autowired
     TagTradRepo ttr;
 
+    @Autowired
+    GameRepo gr;
+
     public static void main(String[] args) {
         SpringApplication.run(app.class, args);
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void run(String... args) throws Exception {
 
-        Categories cat = new Categories();
-        cat.name = "MyName2";
-        cr.save(cat);
-        cr.findAll().forEach(c ->{
-            System.out.println(c.id);
-        });
 
 
-        Tag t1 = new Tag();
-        t1.name = "t1";
-        TagTrad tt1 = new TagTrad();
-        TagTrad tt2 = new TagTrad();
+        /*Game g1 = new Game(1,2,3,4,5,10.0,"type");
 
-        tt1.gameTag = t1;
-        tt1.lang ="tt1";
+        Set<Tag> sTags = new HashSet<>();
+        sTags.add(t1);
 
-        tt2.gameTag = t1;
-        tt2.lang ="tt2";
+        g1.setTags(sTags);
 
-        tr.save(t1);
-        ttr.save(tt1);
-        ttr.save(tt2);
+        gr.save(g1);*/
+
        /* URL classLoader = getClass().getResource("/firebase-sdk.json");
         FileInputStream serviceAccount =
                 new FileInputStream(classLoader.getPath());
@@ -112,7 +118,7 @@ public class app implements CommandLineRunner{
         System.out.println("App End");*/
     }
 
-    @Bean
+   /* @Bean
     public MongoTemplate mongoTemplate(MongoDbFactory mongoDbFactory,
                                        MongoMappingContext context) {
 
@@ -124,5 +130,5 @@ public class app implements CommandLineRunner{
 
         return mongoTemplate;
 
-    }
+    }*/
 }

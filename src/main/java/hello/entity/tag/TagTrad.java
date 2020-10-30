@@ -15,9 +15,9 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(name = "localization_game_tags")
+@Table(name = "game_tag_localizations")
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"createdAt"},
+@JsonIgnoreProperties(value = {"created_at"},
         allowGetters = true)
 public class TagTrad {
 
@@ -29,14 +29,16 @@ public class TagTrad {
     public String lang;
 
     @Column(name = "trad")
+    @NotBlank
     private String trad;
 
     @ManyToOne
     @JoinColumn(name="id_game_tag", nullable=false)
     public Tag gameTag;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at",nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date createdAt;
+
 }

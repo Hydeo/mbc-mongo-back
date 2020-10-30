@@ -1,6 +1,7 @@
 package hello.entity.tag;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import hello.entity.game.Game;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,7 @@ import java.util.Set;
 @Setter
 @Table(name = "game_tags")
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"createdAt"},
+@JsonIgnoreProperties(value = {"created_at"},
         allowGetters = true)
 public class Tag {
     @Id
@@ -32,8 +33,11 @@ public class Tag {
     @OneToMany(mappedBy="gameTag")
     public Set<TagTrad> localization;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at",nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date createdAt;
+
+    @ManyToMany(mappedBy = "tags")
+    private Set<Game> games;
 }
