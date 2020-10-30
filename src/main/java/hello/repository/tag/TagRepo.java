@@ -9,6 +9,6 @@ import java.lang.reflect.Array;
 import java.util.List;
 
 @Repository
-public interface TagRepo extends JpaRepository<Tag,String>,TagRepoCustom {
+public interface TagRepo extends JpaRepository<Tag,Long>,TagRepoCustom {
     //Tag findByTagName(String tag_name);
 }

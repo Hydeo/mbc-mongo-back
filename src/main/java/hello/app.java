@@ -70,14 +70,7 @@ public class app implements CommandLineRunner{
 
 
 
-        /*Game g1 = new Game(1,2,3,4,5,10.0,"type");
 
-        Set<Tag> sTags = new HashSet<>();
-        sTags.add(t1);
-
-        g1.setTags(sTags);
-
-        gr.save(g1);*/
 
        /* URL classLoader = getClass().getResource("/firebase-sdk.json");
         FileInputStream serviceAccount =

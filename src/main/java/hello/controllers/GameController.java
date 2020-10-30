@@ -44,7 +44,8 @@ public class GameController extends Controller {
     public void testController(){
         ApplicationContext context = SpringContext.getAppContext();
         ServiceTest st = context.getBean(ServiceTest.class);
-        st.testTransactional();
+        //st.testTransactional();
+        st.deleteGame();
     }
 
 }

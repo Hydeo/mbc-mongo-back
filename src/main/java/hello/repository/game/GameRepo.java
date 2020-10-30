@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface GameRepo extends JpaRepository<Game,String>, GameRepoCustom{
+public interface GameRepo extends JpaRepository<Game,Long>, GameRepoCustom{
 
 }

@@ -72,6 +72,9 @@ public class Game {
     @NotBlank
     public Map<String,GameLocalization> localization;*/
 
+    public Game() {
+    }
+
     public Game(@NotNull int nbPlayerMin, @NotNull int nbPlayerMax, @NotNull int timeToPlayMin, @NotNull int timeToPlayMax, @NotNull int ageRecommended, @NotNull double complexity, @NotBlank String type) {
         this.nbPlayerMin = nbPlayerMin;
         this.nbPlayerMax = nbPlayerMax;
@@ -80,5 +83,15 @@ public class Game {
         this.ageRecommended = ageRecommended;
         this.complexity = complexity;
         this.type = type;
+    }
+
+    public void addTag(Tag t) {
+        this.tags.add(t);
+        t.getGames().add(this);
+    }
+
+    public void removeTag(Tag t) {
+        this.tags.remove(t);
+        t.getGames().remove(this);
     }
 }

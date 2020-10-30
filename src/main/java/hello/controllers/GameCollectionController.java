@@ -57,7 +57,7 @@ public class GameCollectionController extends Controller{
     public ResponseEntity addMaskToGameCollection(@RequestBody String json) throws FirebaseAuthException {
         GameCollectionContract gcc = (GameCollectionContract) deserialize(json,"hello.controllers.RequestContract.GameCollectionContract");
 
-        Boolean gameExist = game_repo.existsById(gcc.gameId);
+        Boolean gameExist = game_repo.existsById(Long.parseLong(gcc.gameId));
         if(gameExist) {
             GameCollectionFilled gc = game_collection_repo.addMaskToGameCollection(gcc);
             return new ResponseEntity<GameCollectionFilled>(gc, HttpStatus.OK);
