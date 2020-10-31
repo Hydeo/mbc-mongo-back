@@ -2,7 +2,6 @@ package hello.entity.tag;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hello.entity.game.Game;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -11,9 +10,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
-@Data
 @Entity
 @Getter
 @Setter
@@ -31,7 +30,7 @@ public class Tag {
     public String name;
 
     @OneToMany(mappedBy="gameTag")
-    public Set<TagTrad> localization;
+    public Set<TagTrad> localization = new HashSet();
 
     @Column(name = "created_at",nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -39,5 +38,6 @@ public class Tag {
     private Date createdAt;
 
     @ManyToMany(mappedBy = "tags")
-    private Set<Game> games;
+    @JsonIgnoreProperties("tags")
+    private Set<Game> games = new HashSet();
 }

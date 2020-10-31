@@ -2,10 +2,8 @@ package hello.entity.game;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hello.entity.tag.Tag;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -14,7 +12,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
-@Data
 @Entity
 @Getter
 @Setter
@@ -61,7 +58,7 @@ public class Game {
             joinColumns = {@JoinColumn(name = "id_game")},
             inverseJoinColumns = {@JoinColumn(name = "id_tag")}
     )
-    protected Set<Tag> tags;
+    protected Set<Tag> tags = new HashSet() ;
 
     @Column(name="created_at", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -85,13 +82,15 @@ public class Game {
         this.type = type;
     }
 
-    public void addTag(Tag t) {
+    public Game addTag(Tag t) {
         this.tags.add(t);
         t.getGames().add(this);
+        return this;
     }
 
-    public void removeTag(Tag t) {
+    public Game removeTag(Tag t) {
         this.tags.remove(t);
         t.getGames().remove(this);
+        return this;
     }
 }
