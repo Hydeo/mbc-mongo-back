@@ -1,11 +1,13 @@
 package hello.service;
 
 import hello.entity.game.Game;
+import hello.entity.game.GameLocalization;
 import hello.entity.tag.Tag;
-import hello.entity.tag.TagTrad;
+import hello.entity.tag.TagLocalization;
+import hello.repository.game.GameLocalizationRepo;
 import hello.repository.game.GameRepo;
 import hello.repository.tag.TagRepo;
-import hello.repository.tag.TagTradRepo;
+import hello.repository.tag.TagLocalizationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -22,19 +24,21 @@ public class ServiceTest {
     TagRepo tr;
 
     @Autowired
-    TagTradRepo ttr;
-
+    TagLocalizationRepo ttr;
 
     @Autowired
     GameRepo gr;
+
+    @Autowired
+    GameLocalizationRepo glr;
 
     @Transactional(rollbackFor = {Exception.class})
     public void testTransactional() {
         Tag t1 = new Tag();
         t1.name = "t1";
 
-        TagTrad tt1 = new TagTrad();
-        TagTrad tt2 = new TagTrad();
+        TagLocalization tt1 = new TagLocalization();
+        TagLocalization tt2 = new TagLocalization();
 
         tt1.gameTag = t1;
         tt1.setLang("tt1");
@@ -59,8 +63,11 @@ public class ServiceTest {
     public void testCreation(){
         Game g = createGame();
         Tag t = createTag();
+        GameLocalization gl = createGameLocalization(g);
 
-        gr.save(g.addTag(t));
+        g.addTag(t);
+        
+        g = gr.save(g);
 
         deleteGame(g);
         deleteTag(t);
@@ -79,11 +86,19 @@ public class ServiceTest {
         return tr.save(t1);
     }
 
-    public TagTrad createTagTranslation() {
-        TagTrad tt1 = new TagTrad();
+    public TagLocalization createTagTranslation() {
+        TagLocalization tt1 = new TagLocalization();
         tt1.setLang("eng");
         tt1.setTrad("trad1");
         return tt1;
+    }
+
+    public GameLocalization createGameLocalization(Game game){
+        GameLocalization gl = new GameLocalization(game,"GameTitle", "GameDescription","https://cf.geekdo-images.com/cpYagRqtBCFedYbqB3WcKg__imagepage/img/GoJTHeMQ0dhniBJa3tFo7-3xBpM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5598658.jpg","eng");
+        Set<GameLocalization> gameLocalizationSet = game.getLocalization();
+        gameLocalizationSet.add(gl);
+        game.setLocalization(gameLocalizationSet);
+        return glr.save(gl);
     }
 
     public Game addTagToGame(Game g, Tag t) {
@@ -98,6 +113,10 @@ public class ServiceTest {
 
     @Transactional(rollbackFor = {Exception.class})
     public void deleteGame(Game g) {
+
+        //Delete all localizations linked to the game before deleting the game
+        glr.deleteInBatch(g.getLocalization());
+
         gr.delete(g);
     }
 

@@ -30,7 +30,8 @@ public class Tag {
     public String name;
 
     @OneToMany(mappedBy="gameTag")
-    public Set<TagTrad> localization = new HashSet();
+    @JsonIgnoreProperties("gameTag")
+    public Set<TagLocalization> localization = new HashSet();
 
     @Column(name = "created_at",nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)

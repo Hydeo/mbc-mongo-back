@@ -54,7 +54,7 @@ public class Game {
 
     @ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(
-            name="jt_game_tag",
+            name="links_game_tag",
             joinColumns = {@JoinColumn(name = "id_game")},
             inverseJoinColumns = {@JoinColumn(name = "id_tag")}
     )
@@ -65,9 +65,8 @@ public class Game {
     @CreatedDate
     private Date createdAt;
 
-/* @Column(name = "name")
-    @NotBlank
-    public Map<String,GameLocalization> localization;*/
+    @OneToMany(mappedBy = "game")
+    public Set<GameLocalization> localization = new HashSet<>();
 
     public Game() {
     }

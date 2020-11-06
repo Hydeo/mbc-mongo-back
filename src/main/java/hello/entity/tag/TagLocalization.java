@@ -19,7 +19,7 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created_at"},
         allowGetters = true)
-public class TagTrad {
+public class TagLocalization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

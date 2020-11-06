@@ -1,41 +1,17 @@
 package hello;
 
-import hello.entity.Categories.Categories;
-import hello.entity.game.Game;
-import hello.entity.tag.Tag;
-import hello.entity.tag.TagTrad;
 import hello.repository.categories.CategoriesRepo;
 import hello.repository.game.GameRepo;
 import hello.repository.tag.TagRepo;
-import hello.repository.tag.TagTradRepo;
-import hello.repository.user.UserRepo;
-import hello.service.ServiceTest;
-import hello.utils.SpringContext;
+import hello.repository.tag.TagLocalizationRepo;
 import hello.utils.beans.FireBaseCustomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.mongodb.MongoDbFactory;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
-import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
-import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
-import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import java.util.HashSet;
-import java.util.Set;
 
 @ComponentScan("hello")
 @EnableJpaAuditing
@@ -55,7 +31,7 @@ public class app implements CommandLineRunner{
     TagRepo tr;
 
     @Autowired
-    TagTradRepo ttr;
+    TagLocalizationRepo ttr;
 
     @Autowired
     GameRepo gr;
@@ -67,11 +43,6 @@ public class app implements CommandLineRunner{
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void run(String... args) throws Exception {
-
-
-
-
-
        /* URL classLoader = getClass().getResource("/firebase-sdk.json");
         FileInputStream serviceAccount =
                 new FileInputStream(classLoader.getPath());

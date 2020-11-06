@@ -1,6 +1,8 @@
 package hello.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseAuthException;
 import hello.controllers.RequestContract.Contract;
 import hello.controllers.RequestContract.GameContract;
@@ -34,10 +36,20 @@ public class GameController extends Controller {
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/game")
-    public JsonNode getAllGameLibrary(){
-        List<Game> game_library = game_repo.findAllGames();
+    public String getAllGameLibrary(){
+        /*List<Game> game_library = game_repo.findAllGames();
         JsonNode json_game_library = MyUtils.customObjectIdJsonMapper(game_library);
-        return json_game_library;
+        return json_game_library;*/
+
+        List<Game> gameLibrary = game_repo.findAll();
+        ObjectMapper om = new ObjectMapper();
+        String json = "";
+        try {
+            json =  om.writeValueAsString(gameLibrary);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
+        return json;
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/game/test-controller")

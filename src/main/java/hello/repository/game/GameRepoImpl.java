@@ -19,11 +19,11 @@ public class GameRepoImpl implements GameRepoCustom {
     /*@Autowired
     MongoTemplate mongo_template;*/
 
-    @Override
+    /*@Override
     public List<Game> findAllGames() {
 
 
-        /*Aggregation agreg = newAggregation(
+        Aggregation agreg = newAggregation(
                 unwind("tags"),
                 lookup("tag","tags._id","_id","tags"),
                 unwind("tags"),
@@ -40,7 +40,7 @@ public class GameRepoImpl implements GameRepoCustom {
         );
         AggregationResults<Game> groupResults
                 = mongo_template.aggregate(agreg,"game" , Game.class);
-        List<Game> result = groupResults.getMappedResults();*/
+        List<Game> result = groupResults.getMappedResults();
         return null;
-    }
+    }*/
 }
