@@ -28,54 +28,6 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
     MongoTemplate mongo_template;
 
     @Override
-    public GameCollectionFilled toogleGameToCollection(GameCollectionContract gcag) {
-        //Check if gameId already exist in the collection
-        BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.hydrated_token.getUid()));
-        bd.append("gameIds", new BsonObjectId(new ObjectId(gcag.gameId)));
-        long isAlreadyInCollection = mongo_template.getCollection("gameCollection").countDocuments(bd);
-
-        try {
-            BsonDocument bd2 = new BsonDocument("_id", new BsonObjectId(new ObjectId(gcag.gameId)));
-            long doesGameExist = mongo_template.getCollection("game").countDocuments(bd2);
-            if(doesGameExist ==0) {
-                //TODO Throw non existing game error
-            }
-        }
-        catch (IllegalArgumentException e){
-            //TODO Handle IllegalArgumentException
-            return null;
-        }
-
-
-        if(isAlreadyInCollection > 0 ){
-            //TODO Handle Custom Exeption, here : game already exist in the collection
-            Query query =  Query.query( Criteria.where("userId").is(gcag.hydrated_token.getUid()));
-            Update update = new Update().pull("gameIds",new ObjectId(gcag.gameId));
-            FindAndModifyOptions options = FindAndModifyOptions.options();
-            options.returnNew(true);
-            mongo_template.findAndModify(query, update, options, GameCollection.class);
-
-        }
-        else{
-            //Upsert create a new gameCollection doc if it doesn't exist
-            Query query = new Query();
-            query.addCriteria(new Criteria().where("userId").is(gcag.hydrated_token.getUid()));
-            mongo_template.upsert(query, new Update().push("gameIds", new ObjectId(gcag.gameId)), GameCollection.class);
-        }
-
-        return this.getUserCollection(gcag.hydrated_token.getUid());
-    }
-
-    @Override
-    public void updateIsPublicCollection(boolean isPublic, Long collectionId) {
-        Query query =  Query.query( Criteria.where("id").is(collectionId));
-        Update update = new Update().set("isPublic",isPublic);
-        FindAndModifyOptions options = FindAndModifyOptions.options();
-        options.returnNew(true);
-        GameCollection gc = mongo_template.findAndModify(query, update, options, GameCollection.class);
-    }
-
-    @Override
     public GameCollectionFilled addMaskToGameCollection(GameCollectionContract gcag) {
         //Check if gameId already exist in the collection
         BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.hydrated_token.getUid()));

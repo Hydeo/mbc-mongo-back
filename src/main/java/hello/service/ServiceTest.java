@@ -67,14 +67,42 @@ public class ServiceTest {
     }
 
     @Transactional
-    public void testCreation(){
+    public void testCreation() {
 
-        User u = new User("uid","identifier");
-        Game g = new Game(1, 2, 3, 4, 5, 10.0, "type");
-        g.addGameLocalization(new GameLocalization(g, "title",  "description",  "imageUrl",  "lang"));
-        g.addTag(new Tag("TagName"));
+        User u = new User(
+                "7whXumP1nOTVPxEJrDxpOKvNTo02",
+                "identifier"
+        );
+        Game g = new Game(
+                1,
+                2,
+                3,
+                4,
+                5,
+                10.0,
+                "type"
+        );
+        g.addGameLocalization(
+                new GameLocalization(
+                        g,
+                        "title",
+                        "description",
+                        "https://cf.geekdo-images.com/_HhIdavYW-hid20Iq3hhmg__imagepage/img/JUEcmeR5Cm5haFjoG5f_Uv8Zlws=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5055631.jpg",
+                        "eng"
+                )
+        );
 
-        GameCollection gc = new GameCollection(u,true);
+        g.addTag(
+                new Tag(
+                        "TagName"
+                )
+        );
+
+        GameCollection gc = new GameCollection(
+                u,
+                true
+        );
+
         gc.getGames().add(g);
 
         entityManager.persist(u);
@@ -82,7 +110,6 @@ public class ServiceTest {
         entityManager.persist(g);
 
         entityManager.persist(gc);
-
 
 
         //GameCollection gc = createGameCollection();
@@ -97,7 +124,7 @@ public class ServiceTest {
         GameCollection gc = new GameCollection(1L,true);
         return gcr.save(gc);
     }*/
-    public GameCollection addGameToGameCollection(GameCollection gc, Game g){
+    public GameCollection addGameToGameCollection(GameCollection gc, Game g) {
         gc.getGames().add(g);
         return gcr.save(gc);
     }
@@ -123,8 +150,8 @@ public class ServiceTest {
         return tlr.save(tt1);
     }
 
-    public GameLocalization createGameLocalization(Game game){
-        GameLocalization gl = new GameLocalization(game,"GameTitle", "GameDescription","https://cf.geekdo-images.com/cpYagRqtBCFedYbqB3WcKg__imagepage/img/GoJTHeMQ0dhniBJa3tFo7-3xBpM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5598658.jpg","eng");
+    public GameLocalization createGameLocalization(Game game) {
+        GameLocalization gl = new GameLocalization(game, "GameTitle", "GameDescription", "https://cf.geekdo-images.com/cpYagRqtBCFedYbqB3WcKg__imagepage/img/GoJTHeMQ0dhniBJa3tFo7-3xBpM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5598658.jpg", "eng");
         Set<GameLocalization> gameLocalizationSet = game.getLocalizations();
         gameLocalizationSet.add(gl);
         game.setLocalizations(gameLocalizationSet);

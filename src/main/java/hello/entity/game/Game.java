@@ -60,6 +60,7 @@ public class Game {
             joinColumns = {@JoinColumn(name = "id_game")},
             inverseJoinColumns = {@JoinColumn(name = "id_tag")}
     )
+    @JsonIgnoreProperties("games")
     protected Set<Tag> tags = new HashSet() ;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.PERSIST)

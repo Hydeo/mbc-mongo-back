@@ -63,7 +63,7 @@ public class GameCollection {
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     private Date updatedAt;
-    
+
     public GameCollection(@NotNull User user, @NotNull Boolean isPublic) {
         this.user = user;
         this.isPublic = isPublic;
