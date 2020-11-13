@@ -1,6 +1,7 @@
 package hello.entity.game;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import hello.entity.gameCollection.GameCollection;
 import hello.entity.tag.Tag;
 import lombok.Getter;
 import lombok.Setter;
@@ -65,9 +66,13 @@ public class Game {
     @CreatedDate
     private Date createdAt;
 
-    @OneToMany(mappedBy = "game")
+    @OneToMany(mappedBy = "game", cascade = CascadeType.PERSIST)
     @JsonIgnoreProperties("game")
     public Set<GameLocalization> localizations = new HashSet<>();
+
+    /*@ManyToMany(mappedBy = "games")
+    @JsonIgnoreProperties("games")
+    private Set<GameCollection> gameCollections = new HashSet<>();*/
 
     public Game() {
     }
@@ -91,6 +96,12 @@ public class Game {
     public Game removeTag(Tag t) {
         this.tags.remove(t);
         t.getGames().remove(this);
+        return this;
+    }
+
+    public Game addGameLocalization(GameLocalization gl) {
+        this.localizations.add(gl);
+        gl.setGame(this);
         return this;
     }
 }

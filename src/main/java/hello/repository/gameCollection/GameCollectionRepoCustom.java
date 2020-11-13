@@ -5,7 +5,7 @@ import hello.entity.gameCollection.GameCollectionFilled;
 
 public interface GameCollectionRepoCustom {
     GameCollectionFilled toogleGameToCollection(GameCollectionContract gcag);
-    void updateIsPublicCollection(boolean isPublic, String collectionId );
+    void updateIsPublicCollection(boolean isPublic, Long collectionId );
     GameCollectionFilled addMaskToGameCollection(GameCollectionContract gcag);
     GameCollectionFilled getUserCollection(String userId);
 

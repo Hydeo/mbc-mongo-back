@@ -2,10 +2,12 @@ package hello.service;
 
 import hello.entity.game.Game;
 import hello.entity.game.GameLocalization;
+import hello.entity.gameCollection.GameCollection;
 import hello.entity.tag.Tag;
 import hello.entity.tag.TagLocalization;
 import hello.repository.game.GameLocalizationRepo;
 import hello.repository.game.GameRepo;
+import hello.repository.gameCollection.GameCollectionRepo;
 import hello.repository.tag.TagRepo;
 import hello.repository.tag.TagLocalizationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +15,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Service
-@Component
 public class ServiceTest {
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Autowired
     TagRepo tr;
@@ -31,6 +35,9 @@ public class ServiceTest {
 
     @Autowired
     GameLocalizationRepo glr;
+
+    @Autowired
+    GameCollectionRepo gcr;
 
     @Transactional(rollbackFor = {Exception.class})
     public void testTransactional() {
@@ -56,22 +63,40 @@ public class ServiceTest {
 
         Set<Tag> sTags = new HashSet<>();
         sTags.add(t1);
-
-
     }
 
+    @Transactional
     public void testCreation(){
-        Game g = createGame();
-        Tag t = createTag();
-        GameLocalization gl = createGameLocalization(g);
 
-        g.addTag(t);
 
-        g = gr.save(g);
+        Game g = new Game(1, 2, 3, 4, 5, 10.0, "type");
+        g.addGameLocalization(new GameLocalization(g, "title",  "description",  "imageUrl",  "lang"));
+        g.addTag(new Tag("TagName"));
+
+        GameCollection gc = new GameCollection("UserId",true);
+        gc.getGames().add(g);
+
+        entityManager.persist(g);
+
+        entityManager.persist(gc);
+
+
+
+        //GameCollection gc = createGameCollection();
+        //addGameToGameCollection(gc,g);
 
         //deleteGame(g);
         //deleteTag(t);
 
+    }
+
+    public GameCollection createGameCollection(){
+        GameCollection gc = new GameCollection("1",true);
+        return gcr.save(gc);
+    }
+    public GameCollection addGameToGameCollection(GameCollection gc, Game g){
+        gc.getGames().add(g);
+        return gcr.save(gc);
     }
 
     public Game createGame() {
