@@ -20,20 +20,20 @@ import java.util.List;
 public class GameController extends Controller {
 
     @Autowired
-    public GameRepo game_repo;
+    public GameRepo gameRepo;
 
     @RequestMapping(method = RequestMethod.POST, value = "/game")
     public ResponseEntity<Game> addGame(@RequestBody String Json) throws FirebaseAuthException {
         Contract new_game_request = deserialize(Json, "hello.controllers.RequestContract.GameContract");
         Game game_object = ((GameContract) new_game_request).getNew_game();
         //TODO check if everything ok when saving
-        game_repo.save(game_object);
+        gameRepo.save(game_object);
         return new ResponseEntity<Game>(game_object, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/game")
     public ResponseEntity<List<Game>> getAllGameLibrary() {
-        List<Game> gameLibrary = game_repo.findAll();
+        List<Game> gameLibrary = gameRepo.findAll();
         return new ResponseEntity<List<Game>>(gameLibrary, HttpStatus.OK);
     }
 
