@@ -47,7 +47,7 @@ public class GameController extends Controller {
         try {
             json =  om.writeValueAsString(gameLibrary);
         } catch (JsonProcessingException e) {
-            return null;
+            return e.toString();
         }
         return json;
     }

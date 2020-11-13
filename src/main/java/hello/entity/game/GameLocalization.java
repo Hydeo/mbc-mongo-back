@@ -3,6 +3,7 @@ package hello.entity.game;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,10 +14,13 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
 @Table(name = "game_localizations")
 @EntityListeners(AuditingEntityListener.class)
+
+@Getter
+@Setter
+@NoArgsConstructor
+
 @JsonIgnoreProperties(value = {"created_at"},
         allowGetters = true)
 public class GameLocalization {

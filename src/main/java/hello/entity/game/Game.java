@@ -66,7 +66,8 @@ public class Game {
     private Date createdAt;
 
     @OneToMany(mappedBy = "game")
-    public Set<GameLocalization> localization = new HashSet<>();
+    @JsonIgnoreProperties("game")
+    public Set<GameLocalization> localizations = new HashSet<>();
 
     public Game() {
     }

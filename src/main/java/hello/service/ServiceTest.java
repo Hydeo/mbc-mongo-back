@@ -24,7 +24,7 @@ public class ServiceTest {
     TagRepo tr;
 
     @Autowired
-    TagLocalizationRepo ttr;
+    TagLocalizationRepo tlr;
 
     @Autowired
     GameRepo gr;
@@ -50,8 +50,8 @@ public class ServiceTest {
 
         tr.save(t1);
 
-        ttr.save(tt1);
-        ttr.save(tt2);
+        tlr.save(tt1);
+        tlr.save(tt2);
 
 
         Set<Tag> sTags = new HashSet<>();
@@ -66,11 +66,11 @@ public class ServiceTest {
         GameLocalization gl = createGameLocalization(g);
 
         g.addTag(t);
-        
+
         g = gr.save(g);
 
-        deleteGame(g);
-        deleteTag(t);
+        //deleteGame(g);
+        //deleteTag(t);
 
     }
 
@@ -82,22 +82,24 @@ public class ServiceTest {
     public Tag createTag() {
         Tag t1 = new Tag();
         t1.name = "t1";
-        createTagTranslation().gameTag = t1;
-        return tr.save(t1);
+        tr.save(t1);
+        createTagTranslation(t1);
+        return t1;
     }
 
-    public TagLocalization createTagTranslation() {
+    public TagLocalization createTagTranslation(Tag t) {
         TagLocalization tt1 = new TagLocalization();
         tt1.setLang("eng");
         tt1.setTrad("trad1");
-        return tt1;
+        tt1.gameTag = t;
+        return tlr.save(tt1);
     }
 
     public GameLocalization createGameLocalization(Game game){
         GameLocalization gl = new GameLocalization(game,"GameTitle", "GameDescription","https://cf.geekdo-images.com/cpYagRqtBCFedYbqB3WcKg__imagepage/img/GoJTHeMQ0dhniBJa3tFo7-3xBpM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5598658.jpg","eng");
-        Set<GameLocalization> gameLocalizationSet = game.getLocalization();
+        Set<GameLocalization> gameLocalizationSet = game.getLocalizations();
         gameLocalizationSet.add(gl);
-        game.setLocalization(gameLocalizationSet);
+        game.setLocalizations(gameLocalizationSet);
         return glr.save(gl);
     }
 
@@ -115,7 +117,7 @@ public class ServiceTest {
     public void deleteGame(Game g) {
 
         //Delete all localizations linked to the game before deleting the game
-        glr.deleteInBatch(g.getLocalization());
+        glr.deleteInBatch(g.getLocalizations());
 
         gr.delete(g);
     }

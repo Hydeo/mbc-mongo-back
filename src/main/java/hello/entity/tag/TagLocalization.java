@@ -3,6 +3,7 @@ package hello.entity.tag;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -11,12 +12,15 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
-@Data
 @Entity
-@Getter
-@Setter
 @Table(name = "game_tag_localizations")
 @EntityListeners(AuditingEntityListener.class)
+
+@Getter
+@Setter
+@NoArgsConstructor
+
+
 @JsonIgnoreProperties(value = {"created_at"},
         allowGetters = true)
 public class TagLocalization {
@@ -26,6 +30,7 @@ public class TagLocalization {
     public Long id;
 
     @Column(name = "lang")
+    @NotBlank
     public String lang;
 
     @Column(name = "trad")
@@ -34,6 +39,7 @@ public class TagLocalization {
 
     @ManyToOne
     @JoinColumn(name="id_game_tag", nullable=false)
+    @NotBlank
     public Tag gameTag;
 
     @Column(name = "created_at",nullable = false, updatable = false)
@@ -41,4 +47,10 @@ public class TagLocalization {
     @CreatedDate
     private Date createdAt;
 
+    public TagLocalization(Long id, @NotBlank String lang, @NotBlank String trad, @NotBlank Tag gameTag) {
+        this.id = id;
+        this.lang = lang;
+        this.trad = trad;
+        this.gameTag = gameTag;
+    }
 }
