@@ -2,7 +2,9 @@ package hello.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import hello.entity.gameCollection.GameCollection;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -10,8 +12,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Entity
+
 @Getter
 @Setter
+@NoArgsConstructor
+
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created_at"},
@@ -19,39 +24,22 @@ import javax.validation.constraints.NotBlank;
 public class User {
 
     @Id
-    public String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column
+    @Column(name ="firebase_UID")
     @NotBlank
-    public String identifier;
+    private String firebaseUID;
 
-    public User() {
-    }
+    @Column(name = "firebase_identifier")
+    @NotBlank
+    private String firebaseIdentifier;
 
-    public User(String UID, String identifier) {
-        this.id = UID;
-        this.identifier = identifier;
-    }
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private GameCollection gameCollection;
 
-
-    @Override
-    public String toString() {
-        return String.format("User[uid = %s,identifier=%s", id, identifier);
-    }
-
-    public String getUid() {
-        return id;
-    }
-
-    public void setUid(String uid) {
-        this.id = uid;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public User(@NotBlank String firebaseUID, @NotBlank String firebaseIdentifier) {
+        this.firebaseUID = firebaseUID;
+        this.firebaseIdentifier = firebaseIdentifier;
     }
 }

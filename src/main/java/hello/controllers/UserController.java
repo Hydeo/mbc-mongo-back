@@ -17,7 +17,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET, value="/getByIdentifier/{identifier}")
     public User getUserByIdentifier(@PathVariable String identifier){
-        return user_repo.findByIdentifier(identifier);
+        return user_repo.findByFirebaseIdentifier(identifier);
     }
 
     @RequestMapping(method = RequestMethod.POST, value= "/signUp")
@@ -28,7 +28,10 @@ public class UserController {
         JSONParser jp = new JSONParser();
         try{
             JSONObject jp_parsed = (JSONObject) jp.parse(json);
-            return user_repo.save(new User(jp_parsed.get("uid").toString(), jp_parsed.get("identifier").toString()));
+            User u = new User();
+            u.setFirebaseUID(jp_parsed.get("uid").toString());
+            u.setFirebaseIdentifier(jp_parsed.get("identifier").toString());
+            return user_repo.save(u);
         }
         catch(ParseException e){
             //TODO See what kind of return we should do for errors

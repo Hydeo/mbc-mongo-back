@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface UserRepo extends JpaRepository<User,String> {
-    User findByIdentifier(String identifier);
+    User findByFirebaseIdentifier(String firebaseIdentifier);
+    User findByFirebaseUID(String firebaseUID);
 }

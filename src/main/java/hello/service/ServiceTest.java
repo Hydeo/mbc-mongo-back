@@ -1,5 +1,6 @@
 package hello.service;
 
+import hello.entity.User;
 import hello.entity.game.Game;
 import hello.entity.game.GameLocalization;
 import hello.entity.gameCollection.GameCollection;
@@ -68,13 +69,15 @@ public class ServiceTest {
     @Transactional
     public void testCreation(){
 
-
+        User u = new User("uid","identifier");
         Game g = new Game(1, 2, 3, 4, 5, 10.0, "type");
         g.addGameLocalization(new GameLocalization(g, "title",  "description",  "imageUrl",  "lang"));
         g.addTag(new Tag("TagName"));
 
-        GameCollection gc = new GameCollection("UserId",true);
+        GameCollection gc = new GameCollection(u,true);
         gc.getGames().add(g);
+
+        entityManager.persist(u);
 
         entityManager.persist(g);
 
@@ -90,10 +93,10 @@ public class ServiceTest {
 
     }
 
-    public GameCollection createGameCollection(){
-        GameCollection gc = new GameCollection("1",true);
+    /*public GameCollection createGameCollection(){
+        GameCollection gc = new GameCollection(1L,true);
         return gcr.save(gc);
-    }
+    }*/
     public GameCollection addGameToGameCollection(GameCollection gc, Game g){
         gc.getGames().add(g);
         return gcr.save(gc);

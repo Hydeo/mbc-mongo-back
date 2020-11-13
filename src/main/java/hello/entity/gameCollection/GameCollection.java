@@ -1,6 +1,8 @@
 package hello.entity.gameCollection;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import hello.entity.User;
 import hello.entity.game.Game;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,9 +31,12 @@ public class GameCollection {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    @Column(name = "user_id")
+
     @NotNull
-    public String userId;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    public User user;
 
     @Column(name = "is_public")
     @NotNull
@@ -48,8 +53,8 @@ public class GameCollection {
     //public ArrayList<GameMask> gameMask;
 
 
-    public GameCollection(@NotNull String userId, @NotNull Boolean isPublic) {
-        this.userId = userId;
+    public GameCollection(@NotNull User user, @NotNull Boolean isPublic) {
+        this.user = user;
         this.isPublic = isPublic;
     }
 }

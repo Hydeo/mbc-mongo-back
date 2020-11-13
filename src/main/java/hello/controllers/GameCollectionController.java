@@ -1,19 +1,19 @@
 package hello.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import hello.controllers.RequestContract.Contract;
 import hello.controllers.RequestContract.GameCollectionContract;
+import hello.entity.User;
 import hello.entity.gameCollection.GameCollection;
 import hello.entity.gameCollection.GameCollectionFilled;
 import hello.repository.game.GameRepo;
 import hello.repository.gameCollection.GameCollectionRepo;
+import hello.repository.user.UserRepo;
 import hello.utils.MyUtils;
 import hello.utils.beans.FireBaseCustomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +27,9 @@ public class GameCollectionController extends Controller{
 
     @Autowired
     public GameRepo game_repo;
+
+    @Autowired
+    public UserRepo ur;
 
     @Autowired
     public FireBaseCustomUtils fcu;
@@ -45,7 +48,8 @@ public class GameCollectionController extends Controller{
     public ResponseEntity<Void> toogleIsPublicCollection(@RequestBody String json) throws FirebaseAuthException {
         Contract c = deserialize(json,"hello.controllers.RequestContract.Contract");
         //if gcc not null
-        GameCollection gc = game_collection_repo.findByUserId(c.getHydrated_token().getUid());
+        User u = ur.findByFirebaseIdentifier(c.hydrated_token.getUid());
+        GameCollection gc = game_collection_repo.findByUserId(u.getId());
         if(gc != null) {
             game_collection_repo.updateIsPublicCollection(!gc.isPublic, gc.id);
             return new ResponseEntity<Void>(HttpStatus.OK);
@@ -68,13 +72,15 @@ public class GameCollectionController extends Controller{
     }
     
     @RequestMapping(method = RequestMethod.POST, value="/GameCollection")
-    public JsonNode getGameCollectionByUserID(@RequestBody String json) throws FirebaseAuthException {
+    public ResponseEntity<GameCollection> getGameCollectionByUserID(@RequestBody String json) throws FirebaseAuthException {
+
         Contract c = (Contract) deserialize(json,"hello.controllers.RequestContract.Contract");
 
-        GameCollectionFilled user_game_collection =  game_collection_repo.getUserCollection(c.hydrated_token.getUid());
-        JsonNode json_user_game_collection = MyUtils.customObjectIdJsonMapper(user_game_collection);
+        String uid = c.hydrated_token.getUid();
+        User u = ur.findByFirebaseUID(c.hydrated_token.getUid());
+        GameCollection gc = game_collection_repo.findByUserId(u.getId());
+        return new ResponseEntity<GameCollection>(gc, HttpStatus.OK);
 
-        return json_user_game_collection;
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/GameCollection/{uid}")
