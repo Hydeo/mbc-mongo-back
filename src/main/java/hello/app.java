@@ -1,6 +1,5 @@
 package hello;
 
-import hello.repository.categories.CategoriesRepo;
 import hello.repository.game.GameRepo;
 import hello.repository.tag.TagRepo;
 import hello.repository.tag.TagLocalizationRepo;
@@ -23,9 +22,6 @@ public class app implements CommandLineRunner{
     private UserRepo userRepo;*/
     @Autowired
     private FireBaseCustomUtils fcu;
-
-    @Autowired
-    CategoriesRepo cr;
 
     @Autowired
     TagRepo tr;

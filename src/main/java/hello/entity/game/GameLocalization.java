@@ -41,6 +41,10 @@ public class GameLocalization {
     @Column
     public String lang;
 
+    @ManyToOne
+    @JoinColumn(name="game_id",nullable = false)
+    private Game game;
+
     @Column(name = "created_at",nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
@@ -50,10 +54,6 @@ public class GameLocalization {
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     private Date updatedAt;
-
-    @ManyToOne
-    @JoinColumn(name="game_id",nullable = false)
-    private Game game;
 
 
     public GameLocalization(Game game, String title, String description, String imageUrl, String lang) {

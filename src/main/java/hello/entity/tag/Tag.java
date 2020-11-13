@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -36,14 +37,19 @@ public class Tag {
     @JsonIgnoreProperties("gameTag")
     public Set<TagLocalization> localization = new HashSet();
 
+    @ManyToMany(mappedBy = "tags")
+    @JsonIgnoreProperties("tags")
+    private Set<Game> games = new HashSet();
+
     @Column(name = "created_at",nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date createdAt;
 
-    @ManyToMany(mappedBy = "tags")
-    @JsonIgnoreProperties("tags")
-    private Set<Game> games = new HashSet();
+    @Column(name = "updated_at",nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
+    private Date updatedAt;
 
     public Tag(@NotBlank String name) {
         this.name = name;

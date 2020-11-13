@@ -6,6 +6,7 @@ import hello.entity.tag.Tag;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -61,18 +62,19 @@ public class Game {
     )
     protected Set<Tag> tags = new HashSet() ;
 
+    @OneToMany(mappedBy = "game", cascade = CascadeType.PERSIST)
+    @JsonIgnoreProperties("game")
+    public Set<GameLocalization> localizations = new HashSet<>();
+
     @Column(name="created_at", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date createdAt;
 
-    @OneToMany(mappedBy = "game", cascade = CascadeType.PERSIST)
-    @JsonIgnoreProperties("game")
-    public Set<GameLocalization> localizations = new HashSet<>();
-
-    /*@ManyToMany(mappedBy = "games")
-    @JsonIgnoreProperties("games")
-    private Set<GameCollection> gameCollections = new HashSet<>();*/
+    @Column(name = "updated_at",nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
+    private Date updatedAt;
 
     public Game() {
     }
