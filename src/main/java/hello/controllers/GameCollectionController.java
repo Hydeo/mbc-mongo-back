@@ -75,13 +75,12 @@ public class GameCollectionController extends Controller {
             if (gc != null) {
                 gc.setIsPublic(!gc.getIsPublic());
                 game_collection_repo.save(gc);
-                return new ResponseEntity<GameCollection>(gc,HttpStatus.OK);
+                return new ResponseEntity<GameCollection>(gc, HttpStatus.OK);
             }
             return new ResponseEntity<GameCollection>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (FirebaseAuthException e) {
+            return new ResponseEntity<GameCollection>(HttpStatus.FORBIDDEN);
         }
-        return null;
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/GameCollection/mask")
@@ -90,8 +89,8 @@ public class GameCollectionController extends Controller {
 
         Boolean gameExist = game_repo.existsById(Long.parseLong(gcc.gameId));
         if (gameExist) {
-            GameCollectionFilled gc = game_collection_repo.addMaskToGameCollection(gcc);
-            return new ResponseEntity<GameCollectionFilled>(gc, HttpStatus.OK);
+            GameCollection gc = game_collection_repo.addMaskToGameCollection(gcc);
+            return new ResponseEntity<GameCollection>(gc, HttpStatus.OK);
         } else {
             return new ResponseEntity<String>("Game doesn't exist", HttpStatus.NOT_FOUND);
         }
@@ -99,24 +98,22 @@ public class GameCollectionController extends Controller {
 
     @RequestMapping(method = RequestMethod.POST, value = "/GameCollection")
     public ResponseEntity<GameCollection> getGameCollectionByUserID(@RequestBody String json) throws FirebaseAuthException {
-
-        Contract c = (Contract) deserialize(json, "hello.controllers.RequestContract.Contract");
-
-        String uid = c.hydrated_token.getUid();
-        User u = ur.findByFirebaseUID(c.hydrated_token.getUid());
-        GameCollection gc = game_collection_repo.findByUserId(u.getId());
-        return new ResponseEntity<GameCollection>(gc, HttpStatus.OK);
-
+        try {
+            Contract c = (Contract) deserialize(json, "hello.controllers.RequestContract.Contract");
+            GameCollection gc = gameCollectionService.getGameCollectionByUserFirebaseUID(c.hydrated_token.getUid());
+            return new ResponseEntity<GameCollection>(gc, HttpStatus.OK);
+        } catch (FirebaseAuthException e) {
+            return new ResponseEntity<GameCollection>(HttpStatus.FORBIDDEN);
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/GameCollection/{uid}")
-    public ResponseEntity getPublicGameCollectionByUserID(@PathVariable String uid) {
-        GameCollectionFilled user_game_collection = game_collection_repo.getUserCollection(uid);
-        if (user_game_collection.isPublic) {
-            JsonNode json_user_game_collection = MyUtils.customObjectIdJsonMapper(user_game_collection);
-            return new ResponseEntity<JsonNode>(json_user_game_collection, HttpStatus.OK);
+    public ResponseEntity<GameCollection> getPublicGameCollectionByUserID(@PathVariable String uid) {
+        GameCollection gc = gameCollectionService.getGameCollectionByUserFirebaseUID(uid);
+        if (gc.isPublic) {
+            return new ResponseEntity<GameCollection>(gc, HttpStatus.OK);
         }
-        return new ResponseEntity<String>("Game Collection doesn't exist or is not public.", HttpStatus.FORBIDDEN);
+        return new ResponseEntity<GameCollection>(HttpStatus.FORBIDDEN);
     }
 
 

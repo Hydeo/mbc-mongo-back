@@ -16,12 +16,12 @@ public class GameCollectionService {
     @Autowired
     GameCollectionRepo gcr;
 
-    public GameCollection getGameCollectionByUserFirebaseUID(String firebaseUID) throws Exception {
+    public GameCollection getGameCollectionByUserFirebaseUID(String firebaseUID) {
         User u = ur.findByFirebaseUID(firebaseUID);
         if (u != null) {
             GameCollection gc = gcr.findByUserId(u.getId());
             return gc;
         }
-        throw new Exception("User not found");
+        return null;
     }
 }

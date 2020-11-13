@@ -3,32 +3,27 @@ package hello.repository.gameCollection;
 import com.mongodb.client.result.UpdateResult;
 import hello.controllers.RequestContract.GameCollectionContract;
 import hello.entity.gameCollection.GameCollection;
-import hello.entity.gameCollection.GameCollectionFilled;
+import hello.service.GameCollectionService;
 import org.bson.BsonDocument;
 import org.bson.BsonObjectId;
 import org.bson.BsonString;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-
-import java.util.List;
-
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
 
     @Autowired
     MongoTemplate mongo_template;
 
+    @Autowired
+    GameCollectionService gameCollectionService;
+
     @Override
-    public GameCollectionFilled addMaskToGameCollection(GameCollectionContract gcag) {
+    public GameCollection addMaskToGameCollection(GameCollectionContract gcag) {
         //Check if gameId already exist in the collection
         BsonDocument bd = new BsonDocument("userId", new BsonString(gcag.hydrated_token.getUid()));
         bd.append("gameIds", new BsonObjectId(new ObjectId(gcag.gameId)));
@@ -43,7 +38,7 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
         }
         catch (IllegalArgumentException e){
             //TODO Handle IllegalArgumentException
-            return this.getUserCollection(gcag.hydrated_token.getUid());
+            return gameCollectionService.getGameCollectionByUserFirebaseUID(gcag.hydrated_token.getUid());
         }
 
         if(count > 0 ){
@@ -52,34 +47,7 @@ public class GameCollectionRepoImpl implements GameCollectionRepoCustom {
             query.addCriteria(new Criteria().where("userId").is(gcag.hydrated_token.getUid()));
             UpdateResult upr = mongo_template.upsert(query, new Update().set("gameMask."+gcag.gameId,gcag.gameMask), GameCollection.class);
         }
-        return this.getUserCollection(gcag.hydrated_token.getUid());
-    }
-
-    @Override
-    public GameCollectionFilled getUserCollection(String userId) {
-
-        Aggregation agreg = newAggregation(
-                match(Criteria.where("userId").is(userId)),
-                lookup("game","gameIds","_id","gameList"),
-                unwind("gameList"),
-                lookup("tag","gameList.tags._id","_id","gameList.tags"),
-                group("_id")
-                        .first("userId").as("userId")
-                        .first("isPublic").as("isPublic")
-                        .push("gameList").as("gameList")
-                        .first("gameMask").as("gameMask")
-                        .push("tags").as("tags"),
-                project("userId","isPublic","gameList","gameMask")
-                    .and(ConditionalOperators.ifNull("isPublic").then(false)).as("isPublic")
-        );
-
-        //Convert the aggregation result into a List
-        AggregationResults<GameCollectionFilled> groupResults
-                = mongo_template.aggregate(agreg,"gameCollection" , GameCollectionFilled.class);
-        List<GameCollectionFilled> result = groupResults.getMappedResults();
-        if(result.size()>0)
-            return result.get(0);
-        return null; //TODO Mhhh returning empty collection seems more robust
+        return  gameCollectionService.getGameCollectionByUserFirebaseUID(gcag.hydrated_token.getUid());
     }
 
 }
